@@ -1,0 +1,27 @@
+{
+  "name": "@fluffy-design-pro/cli",
+  "version": "0.1.0",
+  "description": "CLI for creating Fluffy Design Pro applications",
+  "type": "module",
+  "bin": {
+    "create-fluffy-design-pro": "./dist/index.js"
+  },
+  "files": [
+    "dist",
+    "templates"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "check": "tsc -p tsconfig.json --noEmit",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@clack/prompts": "^0.11.0",
+    "commander": "^14.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.15.3",
+    "typescript": "^5.8.3",
+    "vitest": "^3.1.3"
+  }
+}

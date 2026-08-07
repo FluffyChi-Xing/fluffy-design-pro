@@ -1,0 +1,17 @@
+{
+  "name": "fluffy-design-pro",
+  "version": "0.1.0",
+  "private": true,
+  "packageManager": "pnpm@10.15.0",
+  "engines": {
+    "node": ">=20.19.0"
+  },
+  "scripts": {
+    "build": "pnpm --filter @fluffy-design-pro/cli build",
+    "check": "pnpm --filter @fluffy-design-pro/cli check",
+    "test": "pnpm --filter @fluffy-design-pro/cli test",
+    "playground": "pnpm --dir playground --ignore-workspace dev",
+    "playground:check": "pnpm --dir playground --ignore-workspace check",
+    "playground:build": "pnpm --dir playground --ignore-workspace build"
+  }
+}

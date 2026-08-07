@@ -9,3 +9,12 @@ dist/
 npm-debug.log
 yarn-error.log
 
+## webstorm
+.idea/
+
+## ai folders
+.claude/
+
+## local generated app for manual verification
+playground/
+
