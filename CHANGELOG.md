@@ -2,6 +2,24 @@
 
 本文件记录 Fluffy Design Pro 各版本的变更。格式基于 [Keep a Changelog](https://keepachangelog.com/zh-CN/1.1.0/)，版本遵循 [Semantic Versioning](https://semver.org/lang/zh-CN/)。
 
+## [0.1.1] - 2026-08-08
+
+### Added
+
+- CLI 包根目录新增 `README.md`，供 npm 包页面展示（安装、用法、选项、生成结构、文档链接）。
+
+### Fixed
+
+- 无（README 仅为 npm 包页面补齐）。
+
+### Changed
+
+- 无
+
+### Security
+
+- 无
+
 ## [0.1.0] - 2026-08-08
 
 首次发布。`@fluffy-design-pro/cli` 提供 `create-fluffy-design-pro` 命令，可生成一个开箱即跑、带完整中后台能力的 Vue 3 控制台模板。
