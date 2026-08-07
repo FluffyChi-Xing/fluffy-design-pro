@@ -9,6 +9,10 @@ export type IconName =
   | 'chart'
   | 'icons'
   | 'table'
+  | 'form'
+  | 'feedback'
+  | 'result'
+  | 'tokens'
   | 'external'
 
 export type RouteMeta = RouteRecordRaw['meta'] & {

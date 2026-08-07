@@ -16,7 +16,6 @@ const hasClosableTabs = computed(() => props.tabs.some((tab) => tab.closable))
 
 function openContextMenu(event: MouseEvent, path: string) {
   event.preventDefault()
-  emit('activate', path)
   contextPath.value = path
   contextPosition.value = { x: Math.min(event.clientX, window.innerWidth - 196), y: Math.min(event.clientY, window.innerHeight - 250) }
 }

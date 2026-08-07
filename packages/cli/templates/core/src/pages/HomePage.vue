@@ -1,9 +1,4 @@
 <script setup lang="ts">
-import { computed } from 'vue'
-import { useRoute } from 'vue-router'
-
-const route = useRoute()
-const isWorkspace = computed(() => route.name === 'workspace')
 const metrics = [
   { key: 'projects', value: '12', trend: '+2', tone: 'primary' },
   { key: 'deployments', value: '48', trend: '+18%', tone: 'success' },
@@ -19,18 +14,18 @@ const activity = [
 <template>
   <section class="overview">
     <header class="page-header">
-      <div><p class="eyebrow">{{ isWorkspace ? $t('workspace.eyebrow') : $t('home.eyebrow') }}</p><h1>{{ isWorkspace ? $t('workspace.title') : $t('home.title') }}</h1><p class="description">{{ isWorkspace ? $t('workspace.description') : $t('home.description') }}</p></div>
-      <RouterLink class="primary-action" :to="isWorkspace ? '/' : '/workspace'"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>{{ isWorkspace ? $t('workspace.action') : $t('home.action') }}</RouterLink>
+      <div><p class="eyebrow">{{ $t('home.eyebrow') }}</p><h1>{{ $t('home.title') }}</h1><p class="description">{{ $t('home.description') }}</p></div>
+      <RouterLink class="primary-action" to="/projects"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>{{ $t('home.action') }}</RouterLink>
     </header>
 
     <section class="metrics" :aria-label="$t('home.metrics')"><article v-for="metric in metrics" :key="metric.key" class="metric-card"><p>{{ $t(`home.${metric.key}`) }}</p><div><strong>{{ metric.value }}</strong><span :class="['trend', metric.tone]">{{ metric.trend }}</span></div><small>{{ $t('home.sinceLastWeek') }}</small></article></section>
 
     <section class="content-grid">
-      <article class="panel activity-panel"><header class="panel-header"><div><h2>{{ $t('home.recentActivity') }}</h2><p>{{ $t('home.activityDescription') }}</p></div><RouterLink to="/workspace">{{ $t('home.viewAll') }}</RouterLink></header><ol class="activity-list"><li v-for="item in activity" :key="item.key"><span class="activity-marker" aria-hidden="true"/><div><strong>{{ $t(`home.${item.key}`) }}</strong><p>{{ $t('home.production') }}</p></div><time>{{ item.time }}</time></li></ol></article>
+      <article class="panel activity-panel"><header class="panel-header"><div><h2>{{ $t('home.recentActivity') }}</h2><p>{{ $t('home.activityDescription') }}</p></div><RouterLink to="/projects">{{ $t('home.viewAll') }}</RouterLink></header><ol class="activity-list"><li v-for="item in activity" :key="item.key"><span class="activity-marker" aria-hidden="true"/><div><strong>{{ $t(`home.${item.key}`) }}</strong><p>{{ $t('home.production') }}</p></div><time>{{ item.time }}</time></li></ol></article>
       <article class="panel status-panel"><header class="panel-header"><div><h2>{{ $t('home.platformStatus') }}</h2><p>{{ $t('home.statusDescription') }}</p></div><span class="healthy"><span aria-hidden="true"/>{{ $t('home.healthy') }}</span></header><div class="status-row"><span>{{ $t('home.edgeNetwork') }}</span><strong>{{ $t('home.operational') }}</strong></div><div class="status-row"><span>{{ $t('home.buildPipeline') }}</span><strong>{{ $t('home.operational') }}</strong></div><div class="status-row"><span>{{ $t('home.activityStream') }}</span><strong>{{ $t('home.operational') }}</strong></div></article>
     </section>
 
-    <section class="quick-actions"><header><h2>{{ $t('home.quickActions') }}</h2><p>{{ $t('home.quickActionsDescription') }}</p></header><div class="quick-grid"><RouterLink class="quick-card" to="/workspace"><span class="quick-icon">↗</span><strong>{{ $t('home.newProject') }}</strong><p>{{ $t('home.newProjectDescription') }}</p></RouterLink><RouterLink class="quick-card" to="/workspace"><span class="quick-icon">⌘</span><strong>{{ $t('home.inviteMember') }}</strong><p>{{ $t('home.inviteMemberDescription') }}</p></RouterLink><RouterLink class="quick-card" to="/workspace"><span class="quick-icon">◈</span><strong>{{ $t('home.reviewDeployments') }}</strong><p>{{ $t('home.reviewDeploymentsDescription') }}</p></RouterLink></div></section>
+    <section class="quick-actions"><header><h2>{{ $t('home.quickActions') }}</h2><p>{{ $t('home.quickActionsDescription') }}</p></header><div class="quick-grid"><RouterLink class="quick-card" to="/projects"><span class="quick-icon">↗</span><strong>{{ $t('home.newProject') }}</strong><p>{{ $t('home.newProjectDescription') }}</p></RouterLink><RouterLink class="quick-card" to="/projects"><span class="quick-icon">⌘</span><strong>{{ $t('home.inviteMember') }}</strong><p>{{ $t('home.inviteMemberDescription') }}</p></RouterLink><RouterLink class="quick-card" to="/projects"><span class="quick-icon">◈</span><strong>{{ $t('home.reviewDeployments') }}</strong><p>{{ $t('home.reviewDeploymentsDescription') }}</p></RouterLink></div></section>
   </section>
 </template>
 
