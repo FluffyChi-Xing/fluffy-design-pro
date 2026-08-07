@@ -55,6 +55,8 @@ describe('createProject', () => {
       expect.objectContaining({ path: 'src/components/ui/FTextarea.vue' }),
       expect.objectContaining({ path: 'src/components/ui/FCheckbox.vue' }),
       expect.objectContaining({ path: 'src/components/ui/FToastHost.vue' }),
+      expect.objectContaining({ path: 'src/components/ui/FCode.vue' }),
+      expect.objectContaining({ path: 'src/components/markdown/FMarkdown.vue' }),
       expect.objectContaining({ path: 'src/composables/useTable.ts' }),
       expect.objectContaining({ path: 'src/composables/useLoading.test.ts' }),
       expect.objectContaining({ path: 'vitest.config.ts' }),
