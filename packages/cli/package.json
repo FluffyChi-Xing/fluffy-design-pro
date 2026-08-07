@@ -1,8 +1,24 @@
 {
   "name": "@fluffy-design-pro/cli",
   "version": "0.1.0",
-  "description": "CLI for creating Fluffy Design Pro applications",
+  "description": "CLI for creating Fluffy Design Pro Vue admin applications",
   "type": "module",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/FluffyChi-Xing/fluffy-design-pro.git"
+  },
+  "keywords": [
+    "vue",
+    "vue3",
+    "admin",
+    "admin-dashboard",
+    "cli",
+    "scaffold",
+    "scaffolding",
+    "template",
+    "vite"
+  ],
   "bin": {
     "create-fluffy-design-pro": "./dist/index.js"
   },
@@ -10,10 +26,14 @@
     "dist",
     "templates"
   ],
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "check": "tsc -p tsconfig.json --noEmit",
-    "test": "vitest run"
+    "test": "vitest run",
+    "prepublishOnly": "pnpm build"
   },
   "dependencies": {
     "@clack/prompts": "^0.11.0",
