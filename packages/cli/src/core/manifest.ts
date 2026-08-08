@@ -3,7 +3,7 @@ import { resolve } from 'node:path'
 import { atomicWriteFile, assertSafeRelativePath, hashContent, readGeneratedFile } from './filesystem.js'
 import type { GeneratedFileV1, ManagedFile, ProjectManifest, ProjectManifestV1, ProjectOptions } from './types.js'
 
-const CLI_VERSION = '0.1.1'
+const CLI_VERSION = '0.2.0'
 const TEMPLATE_VERSION = '0.1.0'
 const manifestRelativePath = '.fluffy/manifest.json'
 

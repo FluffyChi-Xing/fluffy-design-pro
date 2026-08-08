@@ -2,6 +2,31 @@
 
 本文件记录 Fluffy Design Pro 各版本的变更。格式基于 [Keep a Changelog](https://keepachangelog.com/zh-CN/1.1.0/)，版本遵循 [Semantic Versioning](https://semver.org/lang/zh-CN/)。
 
+## [0.2.0] - 2026-08-08
+
+### Added
+
+- **应用壳设置面板**：`DefaultLayout` 接入 `f-sheet` 设置面板（`SettingsPanel`），header 齿轮按钮可开关；配套 `useFullscreen` 全屏能力与 `NotificationsPanel` 通知面板。
+- **浮层 UI 组件**：`FDropdown`（下拉菜单）、`FPopover`（气泡卡片）、`FSheet`（抽屉面板），基于新的 `useFloatingMenu` 定位组合式，均以 `v-model:open` 受控。
+- **部署**：新增 `cloudflare` 部署 provider（生成 `wrangler.jsonc` 与 Pages `_redirects` 规则），`--provider` 支持 `vercel` / `cloudflare` / `none`，新增 `--cloudflare-target <pages|workers>` 选项。
+- **现有项目支持**：新增 `adopt` 子命令（检测已有 Vue 3 + Vite 工程，输出受管文件与冲突报告，写入 manifest）；`migrate` 子命令（预览 / 应用受管文件的版本迁移，支持冲突检测与 `migrate rollback <transaction-id>` 回滚）；manifest 升级至 schema v2（`ManagedFile`、迁移事务、`projectKind`）。
+- **可选 Fluffy 生态集成**：新增 `--fluffy-oss` / `--fluffy-log` 及其 `-url` / `-proxy` 变体；模板生成集成模块 `fluffy-oss.ts` / `fluffy-log.ts`、运行时常量 `env.ts` 与开发代理。
+- **上传任务进度监控中心**：`FUpload`（文件上传框，支持拖拽与多选）、`FUploadProgress`（任务进度行）、`FProgress`（进度条）、`FTabs`（标签页），基于 `f-popover` 的 header 上传中心与 Pinia `upload` store；SDK 未配置时自动降级为本地模拟上传。
+- **测试**：新增浮层组件、设置面板、全屏、上传中心、进度 / 标签页、upload store、env、app store 等模板单测，以及 CLI 集成测试。
+
+### Fixed
+
+- 修复 `FSheet` / `FPopover` / `FDropdown` 的 `v-model:open` 绑定：改用具名 `defineModel('open')`。此前无名模型绑定到 `modelValue`，导致设置面板、通知与上传 popover、账户下拉无法打开。
+
+### Changed
+
+- CLI 入口重构为 `create` / `adopt` / `migrate` 子命令结构，`create` 仍为默认命令。
+- 模板新增 `.env.example`；生成工程的 `package.json` 随 SDK 集成自动补齐依赖脚本。
+
+### Security
+
+- 无
+
 ## [0.1.1] - 2026-08-08
 
 ### Added
