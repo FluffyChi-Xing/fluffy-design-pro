@@ -9,7 +9,7 @@ const Host = defineComponent({
     const open = ref(false)
     return { open }
   },
-  template: `<FPopover v-model="open"><template #trigger><button class="trigger">Bell</button></template><div class="popover-content">Notification list</div></FPopover>`
+  template: `<FPopover v-model:open="open"><template #trigger><button class="trigger">Bell</button></template><div class="popover-content">Notification list</div></FPopover>`
 })
 
 afterEach(() => {

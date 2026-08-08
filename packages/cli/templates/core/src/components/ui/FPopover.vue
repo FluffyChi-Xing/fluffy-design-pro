@@ -4,7 +4,7 @@ import { useFloatingMenu } from '@/composables/useFloatingMenu'
 
 interface Props { width?: number }
 const props = withDefaults(defineProps<Props>(), { width: 300 })
-const open = defineModel<boolean>({ default: false })
+const open = defineModel<boolean>('open', { default: false })
 const anchor = useTemplateRef<HTMLElement>('anchor')
 const panel = useTemplateRef<HTMLElement>('panel')
 const { panelStyle } = useFloatingMenu(open, anchor, panel, props.width)

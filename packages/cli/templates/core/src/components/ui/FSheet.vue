@@ -3,7 +3,7 @@ import { onBeforeUnmount, watch } from 'vue'
 
 interface Props { label?: string }
 const props = defineProps<Props>()
-const open = defineModel<boolean>({ default: false })
+const open = defineModel<boolean>('open', { default: false })
 
 function onKeydown(event: KeyboardEvent) {
   if (event.key === 'Escape') open.value = false

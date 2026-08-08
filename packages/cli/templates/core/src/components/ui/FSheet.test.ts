@@ -9,7 +9,7 @@ const Host = defineComponent({
     const open = ref(false)
     return { open }
   },
-  template: `<FSheet v-model="open"><div class="sheet-content">Panel content</div></FSheet>`
+  template: `<FSheet v-model:open="open"><div class="sheet-content">Panel content</div></FSheet>`
 })
 
 afterEach(() => {

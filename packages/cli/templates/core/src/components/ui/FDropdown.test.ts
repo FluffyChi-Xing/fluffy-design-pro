@@ -9,7 +9,7 @@ const Host = defineComponent({
     const open = ref(false)
     return { open }
   },
-  template: `<FDropdown v-model="open"><template #trigger><button class="trigger">Open</button></template><button class="menu-item">Profile</button><button class="menu-item danger">Log out</button></FDropdown>`
+  template: `<FDropdown v-model:open="open"><template #trigger><button class="trigger">Open</button></template><button class="menu-item">Profile</button><button class="menu-item danger">Log out</button></FDropdown>`
 })
 
 afterEach(() => {
