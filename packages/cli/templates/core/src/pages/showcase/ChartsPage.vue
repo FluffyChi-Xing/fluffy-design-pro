@@ -6,12 +6,41 @@ import { GridComponent, LegendComponent, TooltipComponent } from 'echarts/compon
 import { CanvasRenderer } from 'echarts/renderers'
 import { useChart } from '@/composables/useChart'
 
+interface TooltipDatum {
+  axisValueLabel?: string
+  color?: string
+  seriesName?: string
+  value?: number
+}
+
+function formatAxisTooltip(params: unknown): string {
+  const items = (Array.isArray(params) ? params : [params]) as TooltipDatum[]
+  const axisLabel = items[0]?.axisValueLabel ?? ''
+  const rows = items
+    .filter((item) => item.seriesName)
+    .map((item) => {
+      const marker = `<span style="display:inline-block;width:8px;height:8px;border-radius:2px;background:${item.color ?? 'var(--primary)'};margin-right:8px"></span>`
+      const value = typeof item.value === 'number' ? item.value.toLocaleString() : String(item.value ?? '')
+      return `<div style="display:flex;align-items:center;justify-content:space-between;gap:24px"><span style="display:flex;align-items:center;color:var(--muted-foreground);font-size:13px;line-height:1.8">${marker}${item.seriesName}</span><strong style="color:var(--foreground);font-size:13px;font-weight:600">${value}</strong></div>`
+    })
+    .join('')
+  return `<div style="background:var(--surface-elevated);border:1px solid var(--border);border-radius:var(--radius-md);box-shadow:var(--shadow-md);padding:10px 12px;min-width:150px">${axisLabel ? `<div style="color:var(--subtle-foreground);font-size:11px;font-weight:700;letter-spacing:.08em;margin-bottom:4px;text-transform:uppercase">${axisLabel}</div>` : ''}${rows}</div>`
+}
+
 const chartElement = useTemplateRef<HTMLDivElement>('chart')
 const option = computed(() => ({
   color: ['#4f46e5', '#22a06b'],
   grid: { left: 36, right: 20, top: 44, bottom: 28 },
   legend: { top: 8, textStyle: { color: '#7c8090' } },
-  tooltip: { trigger: 'axis' },
+  tooltip: {
+    trigger: 'axis',
+    confine: true,
+    backgroundColor: 'transparent',
+    borderColor: 'transparent',
+    borderWidth: 0,
+    padding: 0,
+    formatter: formatAxisTooltip
+  },
   xAxis: { type: 'category', data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'], axisLine: { lineStyle: { color: '#d8dae0' } } },
   yAxis: { type: 'value', splitLine: { lineStyle: { color: '#eceef2' } } },
   series: [

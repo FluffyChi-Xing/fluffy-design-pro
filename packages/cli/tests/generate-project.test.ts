@@ -56,7 +56,14 @@ describe('createProject', () => {
       expect.objectContaining({ path: 'src/components/ui/FCheckbox.vue' }),
       expect.objectContaining({ path: 'src/components/ui/FToastHost.vue' }),
       expect.objectContaining({ path: 'src/components/ui/FCode.vue' }),
+      expect.objectContaining({ path: 'src/components/ui/FSheet.vue' }),
+      expect.objectContaining({ path: 'src/components/ui/FDropdown.vue' }),
+      expect.objectContaining({ path: 'src/components/ui/FPopover.vue' }),
+      expect.objectContaining({ path: 'src/components/ui/FFullscreen.vue' }),
+      expect.objectContaining({ path: 'src/components/settings/SettingsPanel.vue' }),
+      expect.objectContaining({ path: 'src/components/notification/NotificationsPanel.vue' }),
       expect.objectContaining({ path: 'src/components/markdown/FMarkdown.vue' }),
+      expect.objectContaining({ path: 'src/config/env.ts' }),
       expect.objectContaining({ path: 'src/composables/useTable.ts' }),
       expect.objectContaining({ path: 'src/composables/useLoading.test.ts' }),
       expect.objectContaining({ path: 'vitest.config.ts' }),
@@ -65,13 +72,14 @@ describe('createProject', () => {
     expect(vercel.outputDirectory).toBe('dist')
   })
 
-  it('does not write files during a dry run', async () => {
+  it('plans Cloudflare Pages configuration during a dry run', async () => {
     const directory = resolve(await temporaryDirectory(), 'nested-project')
-    const options = { ...defaultProjectOptions(directory), dryRun: true }
+    const options = { ...defaultProjectOptions(directory), provider: 'cloudflare' as const, dryRun: true }
 
     const result = await createProject(options)
 
     expect(result.created).toBe(false)
+    expect(result.files).toEqual(expect.arrayContaining(['public/_redirects', 'wrangler.jsonc']))
     await expect(readdir(directory)).rejects.toMatchObject({ code: 'ENOENT' })
   })
 
@@ -82,12 +90,72 @@ describe('createProject', () => {
     await expect(createProject(defaultProjectOptions(directory))).rejects.toThrow('Target directory is not empty')
   })
 
-  it('omits deployment configuration when provider is none', async () => {
+  it('generates Cloudflare Pages configuration without Vercel configuration', async () => {
+    const directory = await temporaryDirectory()
+    const options = { ...defaultProjectOptions(directory), provider: 'cloudflare' as const }
+
+    await createProject(options)
+
+    const manifest = JSON.parse(await readFile(resolve(directory, '.fluffy/manifest.json'), 'utf8'))
+    const cloudflare = JSON.parse(await readFile(resolve(directory, 'wrangler.jsonc'), 'utf8'))
+
+    expect(cloudflare.pages_build_output_dir).toBe('./dist')
+    expect(manifest.options.provider).toBe('cloudflare')
+    expect(manifest.options.cloudflareTarget).toBe('pages')
+    expect(manifest.files).toEqual(expect.arrayContaining([
+      expect.objectContaining({ path: 'public/_redirects' }),
+      expect.objectContaining({ path: 'wrangler.jsonc' })
+    ]))
+    const wrangler = manifest.files.find((file: { path: string }) => file.path === 'wrangler.jsonc')
+    expect(wrangler.templatePath).toBeUndefined()
+    expect(await readFile(resolve(directory, 'public/_redirects'), 'utf8')).toBe('/* /index.html 200\n')
+    await expect(readFile(resolve(directory, 'vercel.json'), 'utf8')).rejects.toMatchObject({ code: 'ENOENT' })
+  })
+
+  it('generates Cloudflare Workers configuration when targeting workers', async () => {
+    const directory = await temporaryDirectory()
+    const options = { ...defaultProjectOptions(directory), provider: 'cloudflare' as const, cloudflareTarget: 'workers' as const }
+
+    await createProject(options)
+
+    const manifest = JSON.parse(await readFile(resolve(directory, '.fluffy/manifest.json'), 'utf8'))
+    const wrangler = JSON.parse(await readFile(resolve(directory, 'wrangler.jsonc'), 'utf8'))
+
+    expect(wrangler.pages_build_output_dir).toBeUndefined()
+    expect(wrangler.assets.directory).toBe('./dist')
+    expect(wrangler.assets.not_found_handling).toBe('single-page-application')
+    expect(manifest.options.provider).toBe('cloudflare')
+    expect(manifest.options.cloudflareTarget).toBe('workers')
+    expect(manifest.files).toEqual(expect.arrayContaining([
+      expect.objectContaining({ path: 'wrangler.jsonc' })
+    ]))
+    await expect(readFile(resolve(directory, 'vercel.json'), 'utf8')).rejects.toMatchObject({ code: 'ENOENT' })
+  })
+
+  it('generates the env mechanism and app shell settings', async () => {
+    const directory = await temporaryDirectory()
+    await createProject({ ...defaultProjectOptions(directory), name: 'env-demo', provider: 'none' as const })
+
+    const envExample = await readFile(resolve(directory, '.env.example'), 'utf8')
+    expect(envExample).toContain('VITE_APP_TITLE=env-demo')
+    expect(envExample).toContain('VITE_OSS_ENDPOINT')
+    expect(envExample).toContain('VITE_LOG_TRACE_ENDPOINT')
+
+    const envSource = await readFile(resolve(directory, 'src/config/env.ts'), 'utf8')
+    expect(envSource).toContain('readAppEnv')
+
+    const appConfigSource = await readFile(resolve(directory, 'src/config/app.ts'), 'utf8')
+    expect(appConfigSource).toContain('headerActions')
+    expect(appConfigSource).toContain('menuWidth')
+  })
+
+  it('omits provider root configuration when provider is none', async () => {
     const directory = await temporaryDirectory()
     const options = { ...defaultProjectOptions(directory), provider: 'none' as const }
 
     await createProject(options)
 
     await expect(readFile(resolve(directory, 'vercel.json'), 'utf8')).rejects.toMatchObject({ code: 'ENOENT' })
+    await expect(readFile(resolve(directory, 'wrangler.jsonc'), 'utf8')).rejects.toMatchObject({ code: 'ENOENT' })
   })
 })

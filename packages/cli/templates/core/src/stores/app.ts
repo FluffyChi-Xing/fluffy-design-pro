@@ -7,6 +7,11 @@ export const useAppStore = defineStore('app', () => {
   const isDark = shallowRef(appConfig.defaultDarkMode)
   const locale = shallowRef<'zh-CN' | 'en-US'>(appConfig.defaultLocale)
   const isTabBarVisible = shallowRef(appConfig.showTabBar)
+  const showNavbar = shallowRef(appConfig.showNavbar)
+  const showMenu = shallowRef(appConfig.showMenu)
+  const menuWidth = shallowRef(appConfig.menuWidth)
+  const colorWeak = shallowRef(appConfig.colorWeak)
+  const documentTitle = shallowRef(appConfig.documentTitle)
 
   const documentTheme = computed(() => isDark.value ? 'dark' : 'light')
 
@@ -26,5 +31,28 @@ export const useAppStore = defineStore('app', () => {
     isTabBarVisible.value = !isTabBarVisible.value
   }
 
-  return { isSidebarCollapsed, isDark, locale, isTabBarVisible, documentTheme, toggleSidebar, toggleTheme, toggleLocale, toggleTabBar }
+  function toggleNavbar() {
+    showNavbar.value = !showNavbar.value
+  }
+
+  function toggleMenu() {
+    showMenu.value = !showMenu.value
+  }
+
+  function setMenuWidth(width: number) {
+    menuWidth.value = width
+  }
+
+  function toggleColorWeak() {
+    colorWeak.value = !colorWeak.value
+  }
+
+  function toggleDocumentTitle() {
+    documentTitle.value = !documentTitle.value
+  }
+
+  return {
+    isSidebarCollapsed, isDark, locale, isTabBarVisible, showNavbar, showMenu, menuWidth, colorWeak, documentTitle, documentTheme,
+    toggleSidebar, toggleTheme, toggleLocale, toggleTabBar, toggleNavbar, toggleMenu, setMenuWidth, toggleColorWeak, toggleDocumentTitle
+  }
 })

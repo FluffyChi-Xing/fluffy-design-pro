@@ -1,6 +1,7 @@
 import { mkdir } from 'node:fs/promises'
 import { dirname, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
+import { writeCloudflareConfig } from '../deploy/providers/cloudflare.js'
 import { writeVercelConfig } from '../deploy/providers/vercel.js'
 import { copyTemplate, ensureEmptyDirectory, getProjectName } from './filesystem.js'
 import { writeManifest } from './manifest.js'
@@ -25,16 +26,25 @@ export async function createProject(options: ProjectOptions): Promise<CreateProj
   }
 
   const files = await copyTemplate(templateDirectory, options.directory, variables, options.dryRun)
-  if (options.provider === 'vercel') {
-    files.push(...await writeVercelConfig(options.directory, options.dryRun))
+  const runtimeFiles: string[] = []
+  switch (options.provider) {
+    case 'vercel':
+      runtimeFiles.push(...await writeVercelConfig(options.directory, options.dryRun))
+      break
+    case 'cloudflare':
+      runtimeFiles.push(...await writeCloudflareConfig(options.directory, options.cloudflareTarget, options.dryRun))
+      break
+    case 'none':
+      break
   }
+  files.push(...runtimeFiles)
 
   if (options.dryRun) {
     return { files, created: false }
   }
 
   await mkdir(options.directory, { recursive: true })
-  await writeManifest(options.directory, files, options)
+  await writeManifest(options.directory, files, options, runtimeFiles)
   return { files, created: true }
 }
 
@@ -44,6 +54,7 @@ export function defaultProjectOptions(directory: string): ProjectOptions {
     name: getProjectName(directory),
     packageManager: 'pnpm',
     provider: 'vercel',
+    cloudflareTarget: 'pages',
     themeColor: '#4f46e5',
     language: 'zh-CN',
     darkMode: true,

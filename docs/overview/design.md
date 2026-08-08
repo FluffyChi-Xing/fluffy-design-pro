@@ -66,6 +66,8 @@
 - 默认冲突策略为 `fail`；`skip`、`backup` 必须显式选择，禁止 CLI 未经确认删除文件或覆盖未知内容。每次写入记录事务 ID，并在 `.fluffy/backups/<id>` 保留可回滚备份。
 - 提供 `migrate rollback <id>` 恢复最近一次成功迁移；MVP 不做无边界 AST 重构、不上传项目内容、不自动发布。
 
+> **实现状态（2026-08）**：M4 的当前实现刻意收窄为保守的最小范围，与上文的目标设计有出入，以仓库现状为准。`adopt` 与 `migrate` 只支持 **Vue 3 + Vite** 存量项目，不支持 Vue CLI、Nuxt 与非 Vue 项目。`adopt` 检测后只写入 `.fluffy/manifest.json`，不修改任何业务文件；`migrate` 默认 dry-run，只有显式 `--apply` 才写入，且仅更新「当前内容 hash 与 manifest 基线一致」的 `generator-owned` 文件；目标是 Git 仓库且工作区脏时拒绝执行。冲突（managed 文件被修改 / 缺失 / 模板源缺失）一律 `fail` 且不写入。`migrate rollback <id>` 仅在迁移后文件未被再次修改时恢复。provider 根配置（`vercel.json` / `wrangler.jsonc`）是运行时生成的受管文件，没有模板源，不参与模板版本迁移。更宽松的 `skip` / `backup` 冲突策略属于远期目标。
+
 ### 3.3 部署配置生成
 
 - 定义 provider 抽象：`none`、`vercel`、`cloudflare`；provider 只生成本地配置和说明，不执行登录、上传、部署，也不写入 token、账号或 secret。
@@ -324,7 +326,7 @@ CLI、模板、迁移协议和 provider 需要独立版本；生成结果或被�
 7. [ASK USER] 支持的 Node、浏览器、Vue、Tailwind 与 shadcn-vue 最低版本矩阵是什么？
 8. [ASK USER] 是否需要在生成阶段自动执行依赖安装、类型检查和构建，还是只输出命令由用户执行？
 9. [ASK USER] Cloudflare provider 的 MVP 目标是 Cloudflare Pages 静态站点还是 Workers 部署？两者配置入口和构建产物不同，不能默认混用。
-10. [ASK USER] 存量项目首批支持范围是“已有 Vue + Vite 项目”，还是还要覆盖 Vue CLI、Nuxt 或非 Vue 项目？
+10. [RESOLVED] 存量项目首批支持范围已确定为「Vue 3 + Vite」；Vue CLI、Nuxt 与非 Vue 项目明确不支持，见 3.2 实现状态。
 11. [ASK USER] Navbar 默认显示哪些区域（品牌、折叠、面包屑、搜索、语言、主题、通知、用户菜单），哪些只作为可选 slot？
 12. [ASK USER] `backup` 冲突策略是否允许 CLI 自动写入 `.fluffy/backups/<id>`，还是所有备份都必须由用户显式确认？
 
