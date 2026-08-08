@@ -2,6 +2,9 @@
 
 面向 Vue 3 中后台应用的项目生成 CLI 与轻量前端基础层模板。运行一条命令即可生成一个带应用壳、路由、国际化、主题、表单、表格、图表与反馈组件的中后台工程，而非空白 Vue 页面。
 
+<img width="1920" height="1031" alt="image" src="https://github.com/user-attachments/assets/533caf2f-0708-4005-86aa-e0b151de6ad2" />
+
+
 ```bash
 npx create-fluffy-design-pro@latest my-admin
 ```
