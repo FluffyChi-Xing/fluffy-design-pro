@@ -97,7 +97,13 @@ function manifestOptions(options: ProjectOptions): ProjectManifest['options'] {
     cloudflareTarget: options.cloudflareTarget,
     themeColor: options.themeColor,
     language: options.language,
-    darkMode: options.darkMode
+    darkMode: options.darkMode,
+    fluffyOss: options.fluffyOss,
+    fluffyLog: options.fluffyLog,
+    fluffyOssUrl: options.fluffyOssUrl,
+    fluffyLogUrl: options.fluffyLogUrl,
+    fluffyOssProxy: options.fluffyOssProxy,
+    fluffyLogProxy: options.fluffyLogProxy
   }
 }
 

@@ -4,12 +4,13 @@ import { dirname, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { exists, hashContent, renderTemplate, safeResolve } from './filesystem.js'
 import { getTemplateVersion } from './manifest.js'
+import { templateVariables } from './template-variables.js'
 import type { MigrationPlan, ProjectManifest } from './types.js'
 
 const templateDirectory = resolve(dirname(fileURLToPath(import.meta.url)), '../../templates/core')
 
 export async function createMigrationPlan(projectDirectory: string, manifest: ProjectManifest): Promise<MigrationPlan> {
-  const template = await renderTemplate(templateDirectory, templateVariables(manifest))
+  const template = await renderTemplate(templateDirectory, templateVariables(manifest.options))
   const changes: MigrationPlan['changes'] = []
   const conflicts: MigrationPlan['conflicts'] = []
 
@@ -53,15 +54,5 @@ export async function createMigrationPlan(projectDirectory: string, manifest: Pr
     changes,
     conflicts,
     warnings: manifest.templateVersion === getTemplateVersion() ? [] : [`Updating template ${manifest.templateVersion} to ${getTemplateVersion()}.`]
-  }
-}
-
-function templateVariables(manifest: ProjectManifest): Record<string, string> {
-  return {
-    PROJECT_NAME: manifest.options.name,
-    PACKAGE_MANAGER: manifest.options.packageManager,
-    THEME_COLOR: manifest.options.themeColor,
-    DEFAULT_LOCALE: manifest.options.language,
-    DEFAULT_DARK_MODE: String(manifest.options.darkMode)
   }
 }

@@ -101,6 +101,12 @@ function configureCreate(command: Command): void {
     .option('--theme-color <color>', 'hex primary color', '#4f46e5')
     .option('--language <locale>', 'zh-CN or en-US', 'zh-CN')
     .option('--no-dark-mode', 'disable the generated dark theme')
+    .option('--fluffy-oss', 'include the optional Fluffy OSS SDK integration')
+    .option('--fluffy-log', 'include the optional Fluffy Log Trace SDK integration')
+    .option('--fluffy-oss-url <url>', 'Fluffy OSS API base URL (implies --fluffy-oss)')
+    .option('--fluffy-log-url <url>', 'Fluffy Log Trace API base URL (implies --fluffy-log)')
+    .option('--fluffy-oss-proxy <target>', 'dev proxy target for a path-prefixed OSS base URL (implies --fluffy-oss)')
+    .option('--fluffy-log-proxy <target>', 'dev proxy target for a path-prefixed Log base URL (implies --fluffy-log)')
     .option('--dry-run', 'show planned generated files without writing')
     .action((directory: string | undefined, flags: Record<string, unknown>, actionCommand: Command) => {
       return createAction(directory, commandFlags(flags, actionCommand))
@@ -176,6 +182,12 @@ async function resolveOptions(directory: string, flags: Record<string, unknown>)
     language,
     themeColor,
     darkMode: flags.darkMode === undefined ? defaults.darkMode : Boolean(flags.darkMode),
+    fluffyOss: Boolean(flags.fluffyOss) || Boolean(flags.fluffyOssUrl) || Boolean(flags.fluffyOssProxy),
+    fluffyLog: Boolean(flags.fluffyLog) || Boolean(flags.fluffyLogUrl) || Boolean(flags.fluffyLogProxy),
+    fluffyOssUrl: flags.fluffyOssUrl ? String(flags.fluffyOssUrl) : '',
+    fluffyLogUrl: flags.fluffyLogUrl ? String(flags.fluffyLogUrl) : '',
+    fluffyOssProxy: flags.fluffyOssProxy ? String(flags.fluffyOssProxy) : '',
+    fluffyLogProxy: flags.fluffyLogProxy ? String(flags.fluffyLogProxy) : '',
     dryRun: Boolean(flags.dryRun)
   }
 }

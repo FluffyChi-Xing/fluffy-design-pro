@@ -3,11 +3,14 @@
 interface ImportMetaEnv {
   readonly VITE_APP_TITLE?: string
   readonly VITE_APP_ENV?: string
-  readonly VITE_OSS_ENDPOINT?: string
-  readonly VITE_OSS_BUCKET?: string
-  readonly VITE_OSS_REGION?: string
-  readonly VITE_LOG_TRACE_ENDPOINT?: string
-  readonly VITE_LOG_TRACE_SAMPLE_RATE?: string
+  readonly VITE_FLUFFY_OSS_BASE_URL?: string
+  readonly VITE_FLUFFY_OSS_APP_ID?: string
+  readonly VITE_FLUFFY_OSS_SECRET?: string
+  readonly VITE_FLUFFY_OSS_PROXY_TARGET?: string
+  readonly VITE_FLUFFY_LOG_APP_ID?: string
+  readonly VITE_FLUFFY_LOG_BASE_URL?: string
+  readonly VITE_FLUFFY_LOG_CREDENTIAL?: string
+  readonly VITE_FLUFFY_LOG_PROXY_TARGET?: string
 }
 
 interface ImportMeta {

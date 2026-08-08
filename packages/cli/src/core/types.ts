@@ -11,6 +11,12 @@ export interface ProjectOptions {
   themeColor: string
   language: 'zh-CN' | 'en-US'
   darkMode: boolean
+  fluffyOss: boolean
+  fluffyLog: boolean
+  fluffyOssUrl: string
+  fluffyLogUrl: string
+  fluffyOssProxy: string
+  fluffyLogProxy: string
   dryRun: boolean
 }
 

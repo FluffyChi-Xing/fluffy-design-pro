@@ -6,9 +6,11 @@ import { i18n } from './locales'
 import App from './App.vue'
 import router from './router'
 import { useAppStore } from './stores/app'
+__FLUFFY_LOG_IMPORT__
 import './styles/main.css'
 
 const pinia = createPinia()
+__FLUFFY_LOG_INIT__
 
 router.afterEach((to) => {
   const app = useAppStore(pinia)

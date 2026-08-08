@@ -21,7 +21,7 @@
     "vue": "^3.5.13",
     "vue-i18n": "^11.4.8",
     "vue-router": "^4.5.0",
-    "vue-tsc": "^2.2.10"
+    "vue-tsc": "^2.2.10"__FLUFFY_OSS_DEPENDENCIES____FLUFFY_LOG_DEPENDENCIES__
   },
   "devDependencies": {
     "@types/markdown-it": "^14.1.2",

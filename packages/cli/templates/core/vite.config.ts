@@ -1,12 +1,24 @@
 import { fileURLToPath, URL } from 'node:url'
-import { defineConfig } from 'vite'
+import { defineConfig, loadEnv, type ProxyOptions } from 'vite'
 import vue from '@vitejs/plugin-vue'
 
-export default defineConfig({
-  plugins: [vue()],
-  resolve: {
-    alias: {
-      '@': fileURLToPath(new URL('./src', import.meta.url))
-    }
+export default defineConfig(({ mode }) => {
+  const env = loadEnv(mode, process.cwd())
+  const proxy: Record<string, ProxyOptions> = {}
+  if (env.VITE_FLUFFY_OSS_BASE_URL?.startsWith('/') && env.VITE_FLUFFY_OSS_PROXY_TARGET) {
+    proxy[env.VITE_FLUFFY_OSS_BASE_URL] = { target: env.VITE_FLUFFY_OSS_PROXY_TARGET, changeOrigin: true }
+  }
+  if (env.VITE_FLUFFY_LOG_BASE_URL?.startsWith('/') && env.VITE_FLUFFY_LOG_PROXY_TARGET) {
+    proxy[env.VITE_FLUFFY_LOG_BASE_URL] = { target: env.VITE_FLUFFY_LOG_PROXY_TARGET, changeOrigin: true }
+  }
+
+  return {
+    plugins: [vue()],
+    resolve: {
+      alias: {
+        '@': fileURLToPath(new URL('./src', import.meta.url))
+      }
+    },
+    server: Object.keys(proxy).length > 0 ? { proxy } : undefined
   }
 })

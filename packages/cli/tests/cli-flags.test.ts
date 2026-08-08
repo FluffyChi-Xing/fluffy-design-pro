@@ -75,4 +75,40 @@ describe('createCliProgram flag parsing', () => {
     expect(program.commands.map((command) => command.name())).toContain('create')
     expect(program.options.map((option) => option.long).filter(Boolean)).not.toContain('--provider')
   })
+
+  it('parses Fluffy SDK flags on the `create` subcommand', async () => {
+    await createCliProgram().parseAsync([
+      'node', 'cli', 'create', directory,
+      '--package-manager', 'pnpm',
+      '--provider', 'none',
+      '--fluffy-oss',
+      '--fluffy-log',
+      '--fluffy-oss-url', 'https://oss.example.com/api',
+      '--fluffy-log-url', 'https://logs.example.com/api/v1',
+      '--fluffy-oss-proxy', 'http://localhost:3100',
+      '--fluffy-log-proxy', 'http://localhost:3500'
+    ])
+
+    const options = capturedOptions()
+    expect(options.fluffyOss).toBe(true)
+    expect(options.fluffyLog).toBe(true)
+    expect(options.fluffyOssUrl).toBe('https://oss.example.com/api')
+    expect(options.fluffyLogUrl).toBe('https://logs.example.com/api/v1')
+    expect(options.fluffyOssProxy).toBe('http://localhost:3100')
+    expect(options.fluffyLogProxy).toBe('http://localhost:3500')
+  })
+
+  it('enables an SDK when only its url flag is passed', async () => {
+    await createCliProgram().parseAsync([
+      'node', 'cli', 'create', directory,
+      '--package-manager', 'pnpm',
+      '--provider', 'none',
+      '--fluffy-oss-url', 'https://oss.example.com/api'
+    ])
+
+    const options = capturedOptions()
+    expect(options.fluffyOss).toBe(true)
+    expect(options.fluffyLog).toBe(false)
+    expect(options.fluffyOssProxy).toBe('')
+  })
 })

@@ -1,8 +1,8 @@
 export interface AppEnv {
   title: string
   env: string
-  oss: { endpoint: string; bucket: string; region: string }
-  logTrace: { endpoint: string; sampleRate: number }
+  oss: { baseUrl: string; appId: string; secret: string; proxyTarget: string }
+  logTrace: { appId: string; baseUrl: string; credential: string; proxyTarget: string }
 }
 
 export function readAppEnv(): AppEnv {
@@ -10,13 +10,16 @@ export function readAppEnv(): AppEnv {
     title: import.meta.env.VITE_APP_TITLE ?? '',
     env: import.meta.env.VITE_APP_ENV ?? 'development',
     oss: {
-      endpoint: import.meta.env.VITE_OSS_ENDPOINT ?? '',
-      bucket: import.meta.env.VITE_OSS_BUCKET ?? '',
-      region: import.meta.env.VITE_OSS_REGION ?? ''
+      baseUrl: import.meta.env.VITE_FLUFFY_OSS_BASE_URL ?? '',
+      appId: import.meta.env.VITE_FLUFFY_OSS_APP_ID ?? '',
+      secret: import.meta.env.VITE_FLUFFY_OSS_SECRET ?? '',
+      proxyTarget: import.meta.env.VITE_FLUFFY_OSS_PROXY_TARGET ?? ''
     },
     logTrace: {
-      endpoint: import.meta.env.VITE_LOG_TRACE_ENDPOINT ?? '',
-      sampleRate: Number(import.meta.env.VITE_LOG_TRACE_SAMPLE_RATE ?? 0)
+      appId: import.meta.env.VITE_FLUFFY_LOG_APP_ID ?? '',
+      baseUrl: import.meta.env.VITE_FLUFFY_LOG_BASE_URL ?? '',
+      credential: import.meta.env.VITE_FLUFFY_LOG_CREDENTIAL ?? '',
+      proxyTarget: import.meta.env.VITE_FLUFFY_LOG_PROXY_TARGET ?? ''
     }
   }
 }

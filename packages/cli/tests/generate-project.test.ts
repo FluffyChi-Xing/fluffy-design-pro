@@ -138,11 +138,12 @@ describe('createProject', () => {
 
     const envExample = await readFile(resolve(directory, '.env.example'), 'utf8')
     expect(envExample).toContain('VITE_APP_TITLE=env-demo')
-    expect(envExample).toContain('VITE_OSS_ENDPOINT')
-    expect(envExample).toContain('VITE_LOG_TRACE_ENDPOINT')
+    expect(envExample).toContain('# VITE_FLUFFY_OSS_BASE_URL=')
+    expect(envExample).toContain('# VITE_FLUFFY_LOG_BASE_URL=')
 
     const envSource = await readFile(resolve(directory, 'src/config/env.ts'), 'utf8')
     expect(envSource).toContain('readAppEnv')
+    expect(envSource).toContain('VITE_FLUFFY_OSS_BASE_URL')
 
     const appConfigSource = await readFile(resolve(directory, 'src/config/app.ts'), 'utf8')
     expect(appConfigSource).toContain('headerActions')
@@ -157,5 +158,134 @@ describe('createProject', () => {
 
     await expect(readFile(resolve(directory, 'vercel.json'), 'utf8')).rejects.toMatchObject({ code: 'ENOENT' })
     await expect(readFile(resolve(directory, 'wrangler.jsonc'), 'utf8')).rejects.toMatchObject({ code: 'ENOENT' })
+  })
+
+  it('omits SDK integrations and dependencies by default', async () => {
+    const directory = await temporaryDirectory()
+    await createProject(defaultProjectOptions(directory))
+
+    const packageJson = await readFile(resolve(directory, 'package.json'), 'utf8')
+    expect(packageJson).not.toContain('fluffy-oss-sdk')
+    expect(packageJson).not.toContain('fluffy-log-trace-browser-sdk')
+
+    const manifest = JSON.parse(await readFile(resolve(directory, '.fluffy/manifest.json'), 'utf8'))
+    const paths = manifest.files.map((file: { path: string }) => file.path)
+    expect(paths).not.toEqual(expect.arrayContaining([
+      'src/integrations/fluffy-oss.ts',
+      'src/integrations/fluffy-oss.test.ts',
+      'src/integrations/fluffy-log.ts',
+      'src/integrations/fluffy-log.test.ts'
+    ]))
+  })
+
+  it('generates Fluffy OSS and Log Trace integrations when enabled', async () => {
+    const directory = await temporaryDirectory()
+    const options = {
+      ...defaultProjectOptions(directory),
+      provider: 'none' as const,
+      fluffyOss: true,
+      fluffyLog: true,
+      fluffyOssUrl: 'https://oss.example.com/api',
+      fluffyLogUrl: 'https://logs.example.com/api/v1',
+      fluffyOssProxy: 'http://localhost:3100',
+      fluffyLogProxy: 'http://localhost:3500'
+    }
+    await createProject(options)
+
+    const packageJson = await readFile(resolve(directory, 'package.json'), 'utf8')
+    expect(packageJson).toContain('"fluffy-oss-sdk": "^0.1.1"')
+    expect(packageJson).toContain('"fluffy-log-trace-browser-sdk": "^0.3.1"')
+
+    const manifest = JSON.parse(await readFile(resolve(directory, '.fluffy/manifest.json'), 'utf8'))
+    expect(manifest.options.fluffyOss).toBe(true)
+    expect(manifest.options.fluffyLog).toBe(true)
+    expect(manifest.options.fluffyOssUrl).toBe('https://oss.example.com/api')
+    expect(manifest.files).toEqual(expect.arrayContaining([
+      expect.objectContaining({ path: 'src/integrations/fluffy-oss.ts' }),
+      expect.objectContaining({ path: 'src/integrations/fluffy-log.ts' }),
+      expect.objectContaining({ path: 'src/integrations/fluffy-oss.test.ts' }),
+      expect.objectContaining({ path: 'src/integrations/fluffy-log.test.ts' })
+    ]))
+
+    const envExample = await readFile(resolve(directory, '.env.example'), 'utf8')
+    expect(envExample).toContain('VITE_FLUFFY_OSS_BASE_URL=https://oss.example.com/api')
+    expect(envExample).toContain('VITE_FLUFFY_LOG_BASE_URL=https://logs.example.com/api/v1')
+    expect(envExample).toContain('VITE_FLUFFY_OSS_PROXY_TARGET=http://localhost:3100')
+    expect(envExample).toContain('VITE_FLUFFY_LOG_PROXY_TARGET=http://localhost:3500')
+
+    const mainSource = await readFile(resolve(directory, 'src/main.ts'), 'utf8')
+    expect(mainSource).toContain("import { initFluffyLog } from './integrations/fluffy-log'")
+    expect(mainSource).toContain('initFluffyLog()')
+  })
+
+  it('generates only the enabled OSS integration', async () => {
+    const directory = await temporaryDirectory()
+    await createProject({
+      ...defaultProjectOptions(directory),
+      provider: 'none' as const,
+      fluffyOss: true,
+      fluffyOssUrl: 'https://oss.example.com/api'
+    })
+
+    const packageJson = await readFile(resolve(directory, 'package.json'), 'utf8')
+    expect(packageJson).toContain('"fluffy-oss-sdk": "^0.1.1"')
+    expect(packageJson).not.toContain('fluffy-log-trace-browser-sdk')
+
+    const manifest = JSON.parse(await readFile(resolve(directory, '.fluffy/manifest.json'), 'utf8'))
+    const paths = manifest.files.map((file: { path: string }) => file.path)
+    expect(paths).toContain('src/integrations/fluffy-oss.ts')
+    expect(paths).not.toContain('src/integrations/fluffy-log.ts')
+
+    const envExample = await readFile(resolve(directory, '.env.example'), 'utf8')
+    expect(envExample).toContain('VITE_FLUFFY_OSS_BASE_URL=https://oss.example.com/api')
+    expect(envExample).toContain('# VITE_FLUFFY_LOG_BASE_URL=')
+  })
+
+  it('omits upload components and header wiring by default', async () => {
+    const directory = await temporaryDirectory()
+    await createProject(defaultProjectOptions(directory))
+
+    const manifest = JSON.parse(await readFile(resolve(directory, '.fluffy/manifest.json'), 'utf8'))
+    const paths = manifest.files.map((file: { path: string }) => file.path)
+    expect(paths).not.toEqual(expect.arrayContaining([
+      'src/components/ui/FUpload.vue',
+      'src/components/ui/FUploadProgress.vue',
+      'src/components/ui/FProgress.vue',
+      'src/components/ui/FTabs.vue',
+      'src/components/upload/UploadCenterPanel.vue',
+      'src/stores/upload.ts'
+    ]))
+
+    const navbar = await readFile(resolve(directory, 'src/components/layout/Navbar.vue'), 'utf8')
+    expect(navbar).not.toContain('UploadCenterPanel')
+    const appSource = await readFile(resolve(directory, 'src/config/app.ts'), 'utf8')
+    expect(appSource).toContain('uploadCenter: false')
+    const componentsPage = await readFile(resolve(directory, 'src/pages/showcase/ComponentsPage.vue'), 'utf8')
+    expect(componentsPage).not.toContain('FUpload')
+  })
+
+  it('generates upload components and header wiring when fluffy oss is enabled', async () => {
+    const directory = await temporaryDirectory()
+    await createProject({ ...defaultProjectOptions(directory), provider: 'none' as const, fluffyOss: true })
+
+    const manifest = JSON.parse(await readFile(resolve(directory, '.fluffy/manifest.json'), 'utf8'))
+    expect(manifest.files).toEqual(expect.arrayContaining([
+      expect.objectContaining({ path: 'src/components/ui/FUpload.vue' }),
+      expect.objectContaining({ path: 'src/components/ui/FUploadProgress.vue' }),
+      expect.objectContaining({ path: 'src/components/ui/FProgress.vue' }),
+      expect.objectContaining({ path: 'src/components/ui/FTabs.vue' }),
+      expect.objectContaining({ path: 'src/components/upload/UploadCenterPanel.vue' }),
+      expect.objectContaining({ path: 'src/stores/upload.ts' }),
+      expect.objectContaining({ path: 'src/stores/upload.test.ts' }),
+      expect.objectContaining({ path: 'src/components/ui/FUpload.test.ts' })
+    ]))
+
+    const navbar = await readFile(resolve(directory, 'src/components/layout/Navbar.vue'), 'utf8')
+    expect(navbar).toContain('UploadCenterPanel')
+    expect(navbar).toContain('isFluffyOssConfigured')
+    const appSource = await readFile(resolve(directory, 'src/config/app.ts'), 'utf8')
+    expect(appSource).toContain('uploadCenter: true')
+    const componentsPage = await readFile(resolve(directory, 'src/pages/showcase/ComponentsPage.vue'), 'utf8')
+    expect(componentsPage).toContain('FUpload')
   })
 })

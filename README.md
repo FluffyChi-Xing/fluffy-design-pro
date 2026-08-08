@@ -28,7 +28,7 @@ Fluffy Design Pro 的定位是「**可生成、可复用、可测试的中台前
 | M3 模板 showcase 与反馈 | ✅ 已完成 | 登录、404、结果页、token 页、代码块与 markdown 预览 |
 | M4 存量项目渐进迁移 | ✅ 已完成 | Vue 3 + Vite 项目的保守认领、受管文件迁移与回滚 |
 | M5 部署 provider 扩展 | ✅ 已完成 | Cloudflare Pages 与 Workers 两种目标均已支持（`wrangler.jsonc` + SPA fallback），CLI 增加 `--cloudflare-target` |
-| M6 Fluffy 生态集成 | ⏳ 待完成 | env 管理机制已就绪，Fluffy OSS 与 Fluffy Log Trace Browser SDK 可选集成待完成 |
+| M6 Fluffy 生态集成 | ✅ 已完成 | Fluffy OSS 与 Fluffy Log Trace Browser SDK 可选集成，接入地址与开发代理可由 CLI / `.env` 配置，并含基于 `f-popover` 的上传任务监控中心（`f-upload` / `f-upload-progress`） |
 
 ## 当前已完成
 
@@ -36,6 +36,7 @@ Fluffy Design Pro 的定位是「**可生成、可复用、可测试的中台前
 
 - `create-fluffy-design-pro <directory>`：交互式向导 + 命令行参数
   - `--package-manager`（pnpm / npm / yarn）、`--provider`（vercel / cloudflare / none）、`--cloudflare-target`（pages / workers，默认 pages）、`--theme-color`、`--language`（zh-CN / en-US）、`--no-dark-mode`、`--dry-run`
+  - 可选生态集成（默认不生成）：`--fluffy-oss` / `--fluffy-log` 启用 Fluffy OSS / Fluffy Log Trace SDK；`--fluffy-oss-url` / `--fluffy-log-url` 指定接入地址、`--fluffy-oss-proxy` / `--fluffy-log-proxy` 指定开发代理目标（后两者传入即隐含启用对应 SDK）
 - 非空目录默认拒绝覆盖；`vercel` 为默认部署 provider，选择 `none` 时不生成部署文件；选择 `cloudflare` 时默认生成 Cloudflare Pages 静态站点配置，改用 `--cloudflare-target workers` 则生成 Workers 静态资源 + SPA fallback（`wrangler.jsonc` 按目标生成），不执行登录、上传或部署，也不写入账号、token 或 secret
 - 生成 `.fluffy/manifest.json` 文件清单，记录生成结果
 - 单测覆盖生成流程、manifest 与 provider 行为
@@ -46,18 +47,18 @@ Fluffy Design Pro 的定位是「**可生成、可复用、可测试的中台前
 - **路由**：模块化注册表（dashboard / external / management / showcase），新页面通过模块文件接入并自动进菜单
 - **页面**：`Home`、`Projects`、`Deployments`、`Settings`、`ExternalFrame`、`Login`、`NotFound`（404 展示无效路径并引导回首页）
 - **showcase 页面**：`Charts`、`Components`、`Feedback`、`Form`、`Icons`、`Result`、`Table`、`Tokens`
-- **`f-` UI 基础组件**：`FButton`、`FCheckbox`、`FCode`、`FDropdown`（通用下拉菜单）、`FFormItem`、`FFullscreen`（全屏切换）、`FInput`、`FPanel`、`FPopover`（锚定浮层，用于消息通知）、`FResult`、`FSelect`、`FSheet`（右侧滑入设置面板）、`FSkeleton`、`FSpinner`、`FTextarea`、`FToastHost`
+- **`f-` UI 基础组件**：`FButton`、`FCheckbox`、`FCode`、`FDropdown`（通用下拉菜单）、`FFormItem`、`FFullscreen`（全屏切换）、`FInput`、`FPanel`、`FPopover`（锚定浮层，用于消息通知）、`FProgress`、`FTabs`（shadcn 风格进度条 / 标签页）、`FResult`、`FSelect`、`FSheet`（右侧滑入设置面板）、`FSkeleton`、`FSpinner`、`FTextarea`、`FToastHost`、`FUpload`、`FUploadProgress`（文件上传与上传进度监控，`--fluffy-oss` 时生成）
   - `FCode`：代码块卡片，shiki 语法高亮，左上红黄绿圆点折叠代码段，右上 lang 标签与复制按钮
   - `FMarkdown`：markdown 预览，代码块复用 `FCode` 渲染（markdown-it + shiki）
 - **组合式逻辑**：`useLoading`（并发任务）、`useTable`（本地 / 请求两种模式）、`useChart`（ECharts 生命周期）、`useForm`（轻量内置校验：required / pattern / 同步 validator）、`useToast`
 - **基础设施**：vue-i18n 中英文、CSS 语义 token + light/dark 主题、Pinia（app / tabs）、Vitest + Vue Test Utils 测试基础
 - **运行时设置面板**：右上角设置齿轮 / 账户菜单打开 `SettingsPanel`（右侧 `FSheet`），可实时开关 TabBar、导航栏、菜单栏，调整菜单宽度（220 / 244 / 280），切换色弱模式与页面标题；状态仅运行时生效（seed 自 `appConfig`，不做持久化）
-- **全局配置与 env 管理**：`src/config/app.ts` 通过全局变量显式配置导航栏 / 菜单 / 菜单宽度 / 色弱 / 页面标题 / 右上角操作；`src/config/env.ts` 提供类型化的 `VITE_*` 读取（含 M6 预留的 OSS 与 Log Trace key），`.env.example` 列出全部可用 key
+- **全局配置与 env 管理**：`src/config/app.ts` 通过全局变量显式配置导航栏 / 菜单 / 菜单宽度 / 色弱 / 页面标题 / 右上角操作；`src/config/env.ts` 提供类型化的 `VITE_*` 读取（含 Fluffy OSS 与 Log Trace 接入配置），`.env.example` 列出全部可用 key
+- **Fluffy 生态集成（可选）**：`--fluffy-oss` / `--fluffy-log` 时生成 `src/integrations/` 下的可选集成并注入依赖——`fluffy-log.ts` 在应用入口初始化（appId / 接入地址 / credential 齐备时启用），`fluffy-oss.ts` 提供带签名认证的 `uploadToFluffyOss`；接入地址支持完整 URL 或 `/路径` 前缀，后者由 `vite.config.ts` 依据 `VITE_FLUFFY_*_PROXY_TARGET` 自动配置 `server.proxy` 转发。`--fluffy-oss` 时还生成上传中心（基于 `f-popover` 的任务进度监控，Pinia + SDK + `FProgress` / `FTabs`）：SDK 配置齐备时 header 右侧出现上传中心入口并走真实上传，未配置时 `FUpload` 模拟上传（本地进度到 100% 并提示），两组件可脱离 SDK 独立使用
 
 ## 待完成
 
 - **存量项目渐进迁移**：当前支持 Vue 3 + Vite 项目。`adopt [dir]` 检测技术栈、锁文件、Git 状态、manifest 和模板冲突，确认后只写 `.fluffy/manifest.json`；`migrate [dir]` 默认 dry-run，仅更新已认领且 hash 未变化的 `generator-owned` 文件，`migrate [dir] --apply --yes` 执行带 staging/备份的迁移，`migrate rollback <transaction-id> [dir] --yes` 可恢复未被后续修改的文件。迁移要求 Git 工作区干净，不会覆盖未知业务文件、修改依赖或配置文件，也不支持 Vue CLI、Nuxt 和非 Vue 项目。
-- **Fluffy 生态 SDK 集成**：Fluffy OSS 与 Fluffy Log Trace Browser 的可选依赖、初始化与 adapter 尚未实现
 - **模板能力扩展**：更多业务 preset（dashboard/list 等）、请求 adapter 与权限 guard 的完整示例
 - **构建优化**：当前生成模板按语言对 shiki 分包，但整体 chunk 仍有优化空间（按需加载、manualChunks）
 

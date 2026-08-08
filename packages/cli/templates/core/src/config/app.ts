@@ -6,6 +6,7 @@ export interface HeaderActions {
   fullscreen: boolean
   account: boolean
   settings: boolean
+  uploadCenter: boolean
 }
 
 export const appConfig = {
@@ -26,7 +27,8 @@ export const appConfig = {
     notifications: true,
     fullscreen: true,
     account: true,
-    settings: true
+    settings: true,
+    uploadCenter: __FLUFFY_UPLOAD_HEADER_ACTION__
   } satisfies HeaderActions
 }
 
