@@ -6,6 +6,8 @@
 
 node_modules/
 dist/
+packages/docs/.vitepress/cache/
+packages/docs/.vitepress/dist/
 npm-debug.log
 yarn-error.log
 

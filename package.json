@@ -10,6 +10,9 @@
     "build": "pnpm --filter @fluffy-design-pro/cli build",
     "check": "pnpm --filter @fluffy-design-pro/cli check",
     "test": "pnpm --filter @fluffy-design-pro/cli test",
+    "docs:dev": "pnpm --filter @fluffy-design-pro/docs dev",
+    "docs:build": "pnpm --filter @fluffy-design-pro/docs build",
+    "docs:preview": "pnpm --filter @fluffy-design-pro/docs preview",
     "playground": "pnpm --dir playground --ignore-workspace dev",
     "playground:check": "pnpm --dir playground --ignore-workspace check",
     "playground:build": "pnpm --dir playground --ignore-workspace build"
