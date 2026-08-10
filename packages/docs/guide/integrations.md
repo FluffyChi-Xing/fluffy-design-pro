@@ -12,13 +12,13 @@ Fluffy OSS 与 Fluffy Log Trace Browser SDK 都是可选集成。未选择时，
 启用上传 SDK 与上传任务中心。组件的交互边界可参考[上传组件预览](/guide/components#可选上传)：
 
 ```bash
-npx create-fluffy-design-pro@latest my-admin --fluffy-oss
+npx @fluffy-design-pro/cli@latest my-admin --fluffy-oss
 ```
 
 也可以直接提供接入地址或开发代理目标；这些参数会隐含启用 OSS 集成：
 
 ```bash
-npx create-fluffy-design-pro@latest my-admin \
+npx @fluffy-design-pro/cli@latest my-admin \
   --fluffy-oss-url https://oss.example.com/api \
   --fluffy-oss-proxy http://localhost:8787
 ```
@@ -28,13 +28,13 @@ npx create-fluffy-design-pro@latest my-admin \
 ## Fluffy Log Trace Browser SDK
 
 ```bash
-npx create-fluffy-design-pro@latest my-admin --fluffy-log
+npx @fluffy-design-pro/cli@latest my-admin --fluffy-log
 ```
 
 设置接入地址或开发代理：
 
 ```bash
-npx create-fluffy-design-pro@latest my-admin \
+npx @fluffy-design-pro/cli@latest my-admin \
   --fluffy-log-url https://log.example.com/api \
   --fluffy-log-proxy http://localhost:8788
 ```

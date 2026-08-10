@@ -6,7 +6,7 @@
 
 
 ```bash
-npx create-fluffy-design-pro@latest my-admin
+npx @fluffy-design-pro/cli@latest my-admin
 ```
 
 ## 设计背景
@@ -15,12 +15,12 @@ npx create-fluffy-design-pro@latest my-admin
 
 Fluffy Design Pro 的定位是「**可生成、可复用、可测试的中台前端基础层**」：
 
-- **不引入完整 UI 框架**：以自研 `f-` 前缀轻量组件 + CSS 语义 token 承载视觉与状态，业务可以随时替换或扩展。
+- **shadcn-vue 基础 + Fluffy 扩展**：生成标准 shadcn-vue 组件目录、Tailwind、Lucide 与 `components.json`；管理端场景通过 FIcon、FChart、FTree、FTypography 和应用壳扩展。
 - **可复用**：表单、表格、图表、loading、toast 等能力以组件与组合式逻辑（composables）形式提供，页面只做组合。
 - **可测试**：模板内置 Vitest 测试基础，生成项目即可运行单元测试。
 - **可配置**：CLI 负责选择与注入配置（语言、主题色、暗色、部署 provider），模板负责运行时能力。
 
-> 早期的概要设计（`docs/overview/design.md`）曾设想以 Tailwind CSS + shadcn-vue 作为 UI 基础。当前实现改用了更轻量的 `f-` 组件 + CSS token 方案，二者在设计目标（可按需、可组合、不绑死整套运行时）上一致，具体技术选型以仓库现状为准。
+> 模板使用 Tailwind CSS + shadcn-vue 作为基础 UI 层；现有泛型 `F*` 组件处于兼容迁移期，新业务优先从 `@/components/ui/*` 使用 shadcn-vue primitives。
 
 ## 里程碑
 
@@ -69,19 +69,19 @@ Fluffy Design Pro 的定位是「**可生成、可复用、可测试的中台前
 
 ```bash
 # 只读检查 Vue 3 + Vite 项目，不写文件
-npx create-fluffy-design-pro@latest adopt ./existing-app --dry-run
+npx @fluffy-design-pro/cli@latest adopt ./existing-app --dry-run
 
 # 确认后仅写入认领 manifest
-npx create-fluffy-design-pro@latest adopt ./existing-app --yes
+npx @fluffy-design-pro/cli@latest adopt ./existing-app --yes
 
 # 默认预览可更新的受管文件
-npx create-fluffy-design-pro@latest migrate ./existing-app
+npx @fluffy-design-pro/cli@latest migrate ./existing-app
 
 # 在 Git 工作区干净时执行迁移
-npx create-fluffy-design-pro@latest migrate ./existing-app --apply --yes
+npx @fluffy-design-pro/cli@latest migrate ./existing-app --apply --yes
 
 # 使用迁移输出的事务 ID 回滚
-npx create-fluffy-design-pro@latest migrate rollback <transaction-id> ./existing-app --yes
+npx @fluffy-design-pro/cli@latest migrate rollback <transaction-id> ./existing-app --yes
 ```
 
 ## 开发

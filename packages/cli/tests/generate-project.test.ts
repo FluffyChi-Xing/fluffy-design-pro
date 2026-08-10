@@ -29,6 +29,9 @@ describe('createProject', () => {
 
     expect(packageJson).toContain('"name": "admin-console"')
     expect(packageJson).toContain('"echarts"')
+    expect(packageJson).toContain('"lucide-vue-next"')
+    expect(packageJson).toContain('"reka-ui"')
+    expect(packageJson).toContain('"shadcn-vue"')
     expect(manifest.options.provider).toBe('vercel')
     expect(manifest.files).toEqual(expect.arrayContaining([
       expect.objectContaining({ path: 'src/components/layout/Navbar.vue' }),
@@ -38,6 +41,14 @@ describe('createProject', () => {
       expect.objectContaining({ path: 'src/layouts/DefaultLayout.vue' }),
       expect.objectContaining({ path: 'src/router/routes/modules/showcase.ts' }),
       expect.objectContaining({ path: 'src/pages/showcase/ChartsPage.vue' }),
+      expect.objectContaining({ path: 'src/pages/showcase/TreePage.vue' }),
+      expect.objectContaining({ path: 'src/components/extensions/FChart.vue' }),
+      expect.objectContaining({ path: 'src/components/extensions/FIcon.vue' }),
+      expect.objectContaining({ path: 'src/components/extensions/FTree.vue' }),
+      expect.objectContaining({ path: 'src/components/extensions/FTypography.vue' }),
+      expect.objectContaining({ path: 'src/directives/permission.ts' }),
+      expect.objectContaining({ path: 'src/lib/utils.ts' }),
+      expect.objectContaining({ path: 'components.json' }),
       expect.objectContaining({ path: 'src/pages/showcase/FormPage.vue' }),
       expect.objectContaining({ path: 'src/pages/showcase/FeedbackPage.vue' }),
       expect.objectContaining({ path: 'src/pages/showcase/TokensPage.vue' }),

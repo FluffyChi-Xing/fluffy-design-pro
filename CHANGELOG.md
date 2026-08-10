@@ -2,6 +2,31 @@
 
 本文件记录 Fluffy Design Pro 各版本的变更。格式基于 [Keep a Changelog](https://keepachangelog.com/zh-CN/1.1.0/)，版本遵循 [Semantic Versioning](https://semver.org/lang/zh-CN/)。
 
+## [0.3.0] - 2026-08-11
+
+### Added
+
+- **shadcn-vue 基线**：生成项目新增 `components.json`、Tailwind v4/Vite 接入、`cn()` 工具与 Button、Input、Textarea、Checkbox、Card、Skeleton、ScrollArea 等标准基础组件目录，可继续使用 shadcn-vue CLI 扩展。
+- **管理端扩展**：新增 Lucide `FIcon`（名称、路由别名、颜色、尺寸与无障碍语义）、声明式 `FChart`、支持选择/级联/半选/全选的 `FTree`，以及输出语义标题/段落并支持截断展开的 `FTypography`。
+- **权限指令**：新增响应式 `v-permission`，支持数组或 `|` 分隔的 token 任一匹配，并提供 `usePermission().setTokens()` 更新 UI 可见性。
+- **展示与文档**：新增 Tree 展示页，并扩充图标、图表、树和排版的 VitePress 交互预览及 shadcn-vue 使用指南。
+- **发布保障**：新增 CLI 包发布契约测试与 npm Trusted Publishing 发布工作流。
+
+### Changed
+
+- 常规 UI 的推荐导入调整为 `@/components/ui/*`；`F*` 聚焦图标、图表、树、排版、布局和运行时等 Fluffy 管理端能力。
+- 主题样式增加语义滚动条 token，覆盖 Firefox 与 WebKit，并随浅色/深色主题和品牌色变化。
+- 图表展示与低层 `useChart` 支持按模块注册、复用已有实例、ResizeObserver 缺失保护和安全释放。
+
+### Fixed
+
+- 文档中的创建命令统一为已发布的 `npx @fluffy-design-pro/cli@latest <directory>`，避免引用不存在的 npm 包。
+- `FTypography` 的非受控展开状态可正确在展开与收起间切换。
+
+### Security
+
+- `v-permission` 仅控制前端 UI；服务端/API 仍必须独立执行授权校验。
+
 ## [0.2.0] - 2026-08-08
 
 ### Added

@@ -6,6 +6,7 @@ import { i18n } from './locales'
 import App from './App.vue'
 import router from './router'
 import { useAppStore } from './stores/app'
+import { createPermissionPlugin } from './directives'
 __FLUFFY_LOG_IMPORT__
 import './styles/main.css'
 
@@ -25,4 +26,5 @@ createApp(App)
   .use(pinia)
   .use(router)
   .use(i18n)
+  .use(createPermissionPlugin(appConfig.permission))
   .mount('#app')

@@ -102,6 +102,20 @@ await table.reload()
 
 `useTable` 支持本地数据源和请求数据模式。请求模式应把服务端结果归一化为 `{ rows, total }`，这样分页 UI 不需要了解后端协议。需要避免在模板中直接对原始数组重复 filter/sort，优先使用 composable 返回的派生 `rows`。
 
+## FChart
+
+普通图表优先使用声明式组件；`echarts` 已包含在 core 模板依赖中，`modules` 只注册实际使用的 ECharts 模块。
+
+```vue
+<FChart
+  :option="trafficOption"
+  :modules="[LineChart, GridComponent, TooltipComponent, CanvasRenderer]"
+  height="320px"
+/>
+```
+
+`FChart` 管理实例创建、option 更新、ResizeObserver 与 dispose，并通过 `ready` 事件和 exposed `resize()` / `setOption()` / `dispose()` 提供高级访问。`modules` 必须只传当前图表实际使用的 ECharts 图表、组件和 renderer；不要导入完整 ECharts 包。
+
 ## useChart
 
 ```ts

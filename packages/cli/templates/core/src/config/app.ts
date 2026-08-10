@@ -15,6 +15,10 @@ export const appConfig = {
   defaultDarkMode: __DEFAULT_DARK_MODE__,
   showTabBar: true,
   themeColor: '__THEME_COLOR__',
+  permission: {
+    tokens: [] as string[],
+    tokenSeparator: '|'
+  },
   showNavbar: true,
   showMenu: true,
   menuWidth: 244,

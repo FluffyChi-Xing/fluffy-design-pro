@@ -21,8 +21,8 @@ hero:
 features:
   - title: 可运行的应用壳
     details: 生成导航栏、侧边栏、标签页、命令面板和设置面板，快速建立中后台的稳定骨架。
-  - title: 轻量 f- 组件基础
-    details: 提供表单、表格、图表、反馈、上传等可组合能力，不强制绑定完整 UI 框架运行时。
+  - title: shadcn-vue 与 Fluffy 扩展
+    details: 可直接使用 shadcn-vue primitives，并获得图表、树、排版、权限与管理端壳层扩展。
   - title: 主题与国际化
     details: 使用 CSS 语义 token，内置 zh-CN 与 en-US、light/dark 主题及 reduced-motion 支持。
   - title: 安全的项目演进
@@ -38,7 +38,7 @@ features:
 ## 从一条命令开始
 
 ```bash
-npx create-fluffy-design-pro@latest my-admin
+npx @fluffy-design-pro/cli@latest my-admin
 ```
 
 Fluffy Design Pro 面向管理后台、运营后台和内部工具。CLI 生成的是带有应用壳、路由组织、页面示例和基础质量设施的 Vue 3 工程，让业务开发从页面组合开始，而不是从重复搭建基础结构开始。
@@ -48,7 +48,7 @@ Fluffy Design Pro 面向管理后台、运营后台和内部工具。CLI 生成�
 ## 当前能力
 
 - **应用体验**：导航、设置、通知、全屏、主题、语言与标签页等常见后台能力已经接入应用壳。
-- **开发基础**：`f-` 前缀 UI 组件与 `useForm`、`useTable`、`useChart`、`useLoading`、`useToast` 等组合式逻辑可直接使用。
+- **开发基础**：shadcn-vue primitives 可直接使用；`FIcon`、`FChart`、`FTree`、`FTypography` 与 `useForm`、`useTable`、`useChart` 等扩展同时可用。
 - **可维护性**：生成项目包含 CSS token、Vitest 基础和 `.fluffy/manifest.json` 受管文件清单。
 - **按需选择**：部署 provider 与 Fluffy SDK 集成只在选择后生成，避免将未使用能力带入项目。
 

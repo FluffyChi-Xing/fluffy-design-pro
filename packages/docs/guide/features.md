@@ -5,7 +5,7 @@ description: 了解生成项目中的应用壳、组件基础、组合式逻辑�
 
 # 功能概览
 
-生成项目包含一套面向中后台的轻量基础层。它不要求引入完整 UI 框架运行时，能力按模块组织，并通过 `f-` 前缀保持边界清晰。
+生成项目以 shadcn-vue primitives 为 UI 基础，并在其上提供 Fluffy 管理端扩展。常规控件从 `@/components/ui/*` 导入；图表、树、排版、图标、布局和权限等管理端能力使用 `F*` 扩展。
 
 ## 应用壳
 
@@ -23,11 +23,9 @@ description: 了解生成项目中的应用壳、组件基础、组合式逻辑�
 
 当前组件覆盖后台项目最常见的交互。查看每个组件的分组说明与交互示例：[组件预览](/guide/components)。
 
-- `FButton`、`FInput`、`FSelect`、`FCheckbox`、`FTextarea`
-- `FFormItem`、`FPanel`、`FResult`
-- `FDropdown`、`FPopover`、`FSheet`
-- `FTabs`、`FProgress`、`FSkeleton`、`FSpinner`
-- `FToastHost`、`FCode`、`FMarkdown`
+- shadcn-vue：`Button`、`Input`、`Textarea`、`Checkbox`、`Card`、`Skeleton` 等，位于 `@/components/ui/*`
+- Fluffy extensions：`FIcon`、`FChart`、`FTree`、`FTypography`
+- Fluffy admin：`FFormItem`、`FResult`、`FToastHost`、`FCode`、`FMarkdown`
 - `FUpload`、`FUploadProgress`（选择 Fluffy OSS 后生成）
 
 组件优先保持可组合、可测试和低运行时耦合。上传、代码块与 markdown 预览可以在不接入 Fluffy SDK 时使用；上传组件在未配置 SDK 时支持本地模拟上传。
@@ -40,7 +38,7 @@ description: 了解生成项目中的应用壳、组件基础、组合式逻辑�
 const { loading, withLoading } = useLoading()
 const { rows, loading: tableLoading, reload } = useTable(fetchUsers)
 const form = useForm(initialValues, rules)
-const chart = useChart(chartElement)
+const chart = useChart(chartElement, { modules: [LineChart, GridComponent, CanvasRenderer], option: chartOption })
 ```
 
 常用能力包括：
@@ -53,7 +51,7 @@ const chart = useChart(chartElement)
 
 ## 主题与国际化
 
-主题使用 CSS 语义 token，支持运行时切换品牌色与 dark 模式。生成配置中的 `themeColor` 会写入 `src/styles/tokens.css`；未使用该配置时，默认使用 indigo 系列。
+主题使用 Tailwind/shadcn 语义 token 与 CSS variables，支持 light/dark 模式。生成配置中的 `themeColor` 会写入 `src/styles/main.css` 的 `--brand`，并派生 primary、focus 和 scrollbar token。
 
 国际化默认生成 `zh-CN` 与 `en-US`，使用 Vue I18n。语言切换位于应用设置中，业务页面可以继续扩展对应 locale 文件。
 

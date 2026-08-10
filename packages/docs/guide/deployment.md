@@ -12,7 +12,7 @@ CLI 负责生成本地部署配置，不负责登录、上传或发布。不会�
 Vercel 是默认 provider：
 
 ```bash
-npx create-fluffy-design-pro@latest my-admin --provider vercel
+npx @fluffy-design-pro/cli@latest my-admin --provider vercel
 ```
 
 命令会生成适合静态 SPA 的 `vercel.json`。
@@ -22,7 +22,7 @@ npx create-fluffy-design-pro@latest my-admin --provider vercel
 选择 Cloudflare Pages：
 
 ```bash
-npx create-fluffy-design-pro@latest my-admin \
+npx @fluffy-design-pro/cli@latest my-admin \
   --provider cloudflare \
   --cloudflare-target pages
 ```
@@ -34,7 +34,7 @@ Pages 目标会生成 `wrangler.jsonc` 与 SPA fallback 所需的静态配置。
 选择 Workers 静态资源目标：
 
 ```bash
-npx create-fluffy-design-pro@latest my-admin \
+npx @fluffy-design-pro/cli@latest my-admin \
   --provider cloudflare \
   --cloudflare-target workers
 ```
@@ -46,7 +46,7 @@ Workers 目标与 Pages 使用不同的资源配置，CLI 只生成你选择的�
 如果部署配置由团队自己维护，可以选择 `none`：
 
 ```bash
-npx create-fluffy-design-pro@latest my-admin --provider none
+npx @fluffy-design-pro/cli@latest my-admin --provider none
 ```
 
 该选择不会生成 provider 根配置文件。

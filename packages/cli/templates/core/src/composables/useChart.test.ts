@@ -6,12 +6,23 @@ const echarts = vi.hoisted(() => {
   const setOption = vi.fn()
   const resize = vi.fn()
   const dispose = vi.fn()
-  return { dispose, init: vi.fn(() => ({ setOption, resize, dispose })), resize, setOption, use: vi.fn() }
+  return {
+    dispose,
+    getInstanceByDom: vi.fn(() => undefined),
+    init: vi.fn(() => ({ setOption, resize, dispose })),
+    resize,
+    setOption,
+    use: vi.fn()
+  }
 })
 const observe = vi.fn()
 const disconnect = vi.fn()
 
-vi.mock('echarts/core', () => ({ init: echarts.init, use: echarts.use }))
+vi.mock('echarts/core', () => ({
+  getInstanceByDom: echarts.getInstanceByDom,
+  init: echarts.init,
+  use: echarts.use
+}))
 
 import { useChart } from '@/composables/useChart'
 

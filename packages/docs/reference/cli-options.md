@@ -49,17 +49,17 @@ create-fluffy-design-pro create my-admin
 
 ```bash
 # 自定义主题色与英文默认语言
-npx create-fluffy-design-pro@latest my-admin \
+npx @fluffy-design-pro/cli@latest my-admin \
   --theme-color '#6366f1' \
   --language en-US
 
 # Cloudflare Workers
-npx create-fluffy-design-pro@latest my-admin \
+npx @fluffy-design-pro/cli@latest my-admin \
   --provider cloudflare \
   --cloudflare-target workers
 
 # 只预览生成计划
-npx create-fluffy-design-pro@latest my-admin --dry-run
+npx @fluffy-design-pro/cli@latest my-admin --dry-run
 ```
 
 ::: warning 安全边界

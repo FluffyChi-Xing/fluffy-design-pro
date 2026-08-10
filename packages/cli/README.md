@@ -3,7 +3,7 @@
 一条命令生成开箱即用的 [Vue 3](https://vuejs.org/) 中后台（管理控制台）工程——自带应用壳、路由、国际化、主题、表单、表格、图表与反馈组件，而不是空白的 Vue 页面。
 
 ```bash
-npx create-fluffy-design-pro@latest my-admin
+npx @fluffy-design-pro/cli@latest my-admin
 ```
 
 ## 特性
@@ -43,23 +43,23 @@ create-fluffy-design-pro [directory] [options]
 
 ```bash
 # 交互式引导
-npx create-fluffy-design-pro@latest my-admin
+npx @fluffy-design-pro/cli@latest my-admin
 
 # 全部选项
-npx create-fluffy-design-pro@latest my-admin \
+npx @fluffy-design-pro/cli@latest my-admin \
   --package-manager npm \
   --provider vercel \
   --theme-color #6366f1 \
   --language en-US
 
 # 部署到 Cloudflare Workers，并集成 Fluffy OSS 上传中心
-npx create-fluffy-design-pro@latest my-admin \
+npx @fluffy-design-pro/cli@latest my-admin \
   --provider cloudflare \
   --cloudflare-target workers \
   --fluffy-oss-url https://oss.example.com/api
 
 # 只预览将生成的文件
-npx create-fluffy-design-pro@latest my-admin --dry-run
+npx @fluffy-design-pro/cli@latest my-admin --dry-run
 ```
 
 命令默认拒绝覆盖非空的目标目录。生成完成后会在新工程中写入 `.fluffy/manifest.json`，记录本次生成的文件清单，作为后续 `migrate` 的迁移基线。
@@ -68,23 +68,23 @@ npx create-fluffy-design-pro@latest my-admin --dry-run
 
 ```bash
 # 检测一个已有 Vue 3 + Vite 工程，列出可受管文件与冲突（只写报告，不修改项目）
-npx create-fluffy-design-pro@latest adopt path/to/project
+npx @fluffy-design-pro/cli@latest adopt path/to/project
 
 # 确认后写入 .fluffy/manifest.json
-npx create-fluffy-design-pro@latest adopt path/to/project --yes
+npx @fluffy-design-pro/cli@latest adopt path/to/project --yes
 ```
 
 ### 迁移受管文件
 
 ```bash
 # 预览迁移计划（不写文件）
-npx create-fluffy-design-pro@latest migrate path/to/project
+npx @fluffy-design-pro/cli@latest migrate path/to/project
 
 # 审阅后应用迁移
-npx create-fluffy-design-pro@latest migrate path/to/project --apply --yes
+npx @fluffy-design-pro/cli@latest migrate path/to/project --apply --yes
 
 # 在受管文件未被改动的前提下回滚一次已提交的迁移
-npx create-fluffy-design-pro@latest migrate rollback <transaction-id> path/to/project
+npx @fluffy-design-pro/cli@latest migrate rollback <transaction-id> path/to/project
 ```
 
 ## 生成结构

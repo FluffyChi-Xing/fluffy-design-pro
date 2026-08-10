@@ -10,13 +10,13 @@ CLI 提供 `create`、`adopt` 与 `migrate` 三类命令。默认命令是 `crea
 ## 创建项目
 
 ```bash
-npx create-fluffy-design-pro@latest my-admin
+npx @fluffy-design-pro/cli@latest my-admin
 ```
 
 也可以显式写出 `create`：
 
 ```bash
-npx create-fluffy-design-pro@latest create my-admin
+npx @fluffy-design-pro/cli@latest create my-admin
 ```
 
 创建流程生成一个新的工程目录与 `.fluffy/manifest.json` 文件清单。CLI 默认不覆盖非空目标目录。
@@ -27,10 +27,10 @@ npx create-fluffy-design-pro@latest create my-admin
 
 ```bash
 # 只读预览，不写文件
-npx create-fluffy-design-pro@latest adopt ./existing-app --dry-run
+npx @fluffy-design-pro/cli@latest adopt ./existing-app --dry-run
 
 # 确认后只写入受管文件清单
-npx create-fluffy-design-pro@latest adopt ./existing-app --yes
+npx @fluffy-design-pro/cli@latest adopt ./existing-app --yes
 ```
 
 确认接管后，CLI 仅写入 `.fluffy/manifest.json`，不会修改业务代码、依赖或现有配置。Vue CLI、Nuxt 与非 Vue 项目不在当前支持范围内。
@@ -40,13 +40,13 @@ npx create-fluffy-design-pro@latest adopt ./existing-app --yes
 迁移默认只展示计划，不写入文件：
 
 ```bash
-npx create-fluffy-design-pro@latest migrate ./existing-app
+npx @fluffy-design-pro/cli@latest migrate ./existing-app
 ```
 
 审阅后使用 `--apply --yes` 执行：
 
 ```bash
-npx create-fluffy-design-pro@latest migrate ./existing-app --apply --yes
+npx @fluffy-design-pro/cli@latest migrate ./existing-app --apply --yes
 ```
 
 只有同时满足以下条件的文件才会被更新：
@@ -62,7 +62,7 @@ npx create-fluffy-design-pro@latest migrate ./existing-app --apply --yes
 成功迁移会输出事务 ID。只要迁移后的受管文件没有再次被修改，即可回滚：
 
 ```bash
-npx create-fluffy-design-pro@latest migrate rollback <transaction-id> ./existing-app --yes
+npx @fluffy-design-pro/cli@latest migrate rollback <transaction-id> ./existing-app --yes
 ```
 
 ::: warning 迁移边界

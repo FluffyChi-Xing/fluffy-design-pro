@@ -15,7 +15,7 @@ Fluffy Design Pro 使用 CLI 创建带应用壳与基础能力的 Vue 3 中后�
 ## 创建项目
 
 ```bash
-npx create-fluffy-design-pro@latest my-admin
+npx @fluffy-design-pro/cli@latest my-admin
 ```
 
 命令会进入交互式向导，收集包管理器、部署 provider、主题色、语言、暗色模式和可选集成等选择。
@@ -46,7 +46,7 @@ pnpm dev
 使用 `--dry-run` 查看 CLI 将生成的文件而不写入磁盘：
 
 ```bash
-npx create-fluffy-design-pro@latest my-admin --dry-run
+npx @fluffy-design-pro/cli@latest my-admin --dry-run
 ```
 
 目标目录非空时，CLI 默认拒绝覆盖。请先确认目录内容，或选择新的项目目录。
