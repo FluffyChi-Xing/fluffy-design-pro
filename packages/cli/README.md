@@ -126,6 +126,123 @@ registerIcons({ CalendarDays })
 
 注册键支持 PascalCase 与 kebab-case 名称。禁止 `import * as Icons from 'lucide-vue-next'`，会破坏 tree-shaking。
 
+## 使用生成的项目
+
+### 常用命令
+
+```bash
+pnpm dev       # 启动开发服务器
+pnpm check     # 类型检查（vue-tsc）
+pnpm test      # 运行 Vitest 单测
+pnpm build     # 类型检查并构建
+pnpm preview   # 本地预览构建产物
+```
+
+生成的工程自带应用壳与 showcase 页面（侧边栏「设计系统展示」分组下），可边运行边对照示例改业务。
+
+### 组件用法
+
+`f-` 组件位于 `src/components/`，在需要处按需显式导入，不做全局注册，便于 tree-shaking：
+
+```ts
+import FButton from '@/components/ui/FButton.vue'
+import FPanel from '@/components/ui/FPanel.vue'
+import FIcon from '@/components/extensions/FIcon.vue'
+```
+
+常用组件一览（完整列表见 `src/components/ui/` 与 `src/components/extensions/`）：
+
+| 组件 | 说明 |
+| --- | --- |
+| `FButton` | 按钮。`variant` 支持 `primary` / `secondary` / `ghost` / `danger`；`loading` 显示内置 spinner 并禁用点击 |
+| `FPanel` | 卡片容器，承载页面区块 |
+| `FInput` / `FTextarea` / `FSelect` / `FCheckbox` | 基础表单控件 |
+| `FFormItem` | 表单字段包装，渲染标签、帮助文本与校验错误 |
+| `FSkeleton` / `FSpinner` / `FResult` / `FProgress` | 加载与反馈状态 |
+| `FTabs` / `FDropdown` / `FPopover` / `FSheet` | 交互组件（`FSheet` 用于设置面板等抽屉） |
+| `FToastHost` | Toast 宿主，配合 `useToast` 使用 |
+| `FCode` / Markdown 组件 | 代码块与 Markdown 预览 |
+| `FIcon` | 图标，见上文「图标扩展」 |
+| `FChart` | ECharts 封装，按需注册图表模块 |
+| `FTree` / `FTypography` | 树形控件与排版扩展 |
+
+示例：
+
+```vue
+<script setup lang="ts">
+import FButton from '@/components/ui/FButton.vue'
+import FPanel from '@/components/ui/FPanel.vue'
+import FIcon from '@/components/extensions/FIcon.vue'
+
+const saving = false
+</script>
+
+<template>
+  <FPanel>
+    <FButton variant="secondary" :loading="saving" @click="save">保存</FButton>
+    <FIcon name="check" color="var(--success)" :size="20" aria-label="已完成" />
+  </FPanel>
+</template>
+```
+
+数据与业务逻辑由组合式函数承载，同样按需导入（`src/composables/`）：
+
+- `useTable`：表格数据源，支持本地 / 请求式数据、列定义、排序、分页、loading 与错误态。
+- `useForm`：表单状态，按列定义执行必填 / 正则 / 自定义校验，提供错误与提交处理。
+- `useChart`：图表 option 与 resize 管理（配合 `FChart`）。
+- `useLoading` / `useToast`：加载指示与 Toast 反馈。
+
+```ts
+import { useTable } from '@/composables/useTable'
+
+const table = useTable({
+  columns: [{ key: 'name', titleKey: 'table.name' }],
+  data: initialRows,                 // 本地数据源
+  request: async ({ page }) => ...,  // 或请求式数据源
+  transform: (result) => ({ rows: result.items, total: result.count }),
+  initialPageSize: 10
+})
+```
+
+### 路由：自动重建
+
+路由采用模块化注册表：`src/router/routes/modules/` 下的每个 `.ts` 文件即一个路由模块，由 `registry.ts` 通过 `import.meta.glob('./routes/modules/*.ts')` 自动加载。**新增或删除路由模块文件即可自动重建路由表与侧边栏导航，无需改动 `router/index.ts`。**
+
+```ts
+// src/router/routes/modules/blog.ts
+import BlogPage from '@/pages/BlogPage.vue'
+import type { RouteModule } from '@/router/types'
+
+export default {
+  routes: [
+    { name: 'blog-list', path: 'blog', component: BlogPage, meta: { titleKey: 'navigation.blog', icon: 'table', groupKey: 'navigation.manage', order: 10 } }
+  ]
+} satisfies RouteModule
+```
+
+`meta` 字段决定导航与页面行为：
+
+- `titleKey` — 菜单与浏览器标题的 i18n key（补充 `src/locales/` 文案）。
+- `icon` — 菜单图标（`src/router/types.ts` 中 `IconName` 定义的内置图标名）。
+- `groupKey` — 所属导航分组；分组展示顺序由 `registry.ts` 的 `groupOrder` 定义。
+- `order` — 组内排序。
+- `hideInMenu` — 为 `true` 时不显示在侧边栏（如登录页、404）。
+- `activeMenu` — 指定高亮的菜单项（用于 iframe 外部页）。
+- `noAffix` — 为 `true` 时不固定为常驻标签页。
+
+外链（新标签打开或 iframe 嵌入）通过 `externalRoutes` 声明，无需页面文件：
+
+```ts
+// src/router/routes/modules/external.ts
+export default {
+  externalRoutes: [
+    { key: 'docs', titleKey: 'navigation.docs', url: 'https://example.com/docs', openMode: 'new-tab', groupKey: 'navigation.resources', order: 10 }
+  ]
+} satisfies RouteModule
+```
+
+新增页面只需三步：在 `src/pages/` 新建页面组件 → 在 `src/router/routes/modules/` 新增（或扩展）路由模块 → 在 `src/locales/` 补充对应文案。
+
 ## 文档
 
 - [项目仓库](https://github.com/FluffyChi-Xing/fluffy-design-pro)
