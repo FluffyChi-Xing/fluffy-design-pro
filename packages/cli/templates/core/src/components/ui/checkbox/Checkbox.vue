@@ -12,7 +12,7 @@ const classes = computed(() => cn('peer size-4 shrink-0 rounded-sm border border
 </script>
 
 <template>
-  <CheckboxRoot :checked="props.modelValue" :disabled="props.disabled" :class="classes" @update:checked="emit('update:modelValue', $event)">
+  <CheckboxRoot :model-value="props.modelValue" :disabled="props.disabled" :class="classes" @update:model-value="emit('update:modelValue', $event)">
     <CheckboxIndicator class="flex items-center justify-center text-primary-foreground"><Check class="size-3.5" /></CheckboxIndicator>
   </CheckboxRoot>
 </template>

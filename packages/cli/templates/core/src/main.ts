@@ -1,5 +1,7 @@
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
+import { CalendarDays } from 'lucide-vue-next'
+import { registerIcons } from '@/lib/icons'
 import { appConfig } from './config/app'
 import { appEnv } from './config/env'
 import { i18n } from './locales'
@@ -9,6 +11,8 @@ import { useAppStore } from './stores/app'
 import { createPermissionPlugin } from './directives'
 __FLUFFY_LOG_IMPORT__
 import './styles/main.css'
+
+registerIcons({ CalendarDays })
 
 const pinia = createPinia()
 __FLUFFY_LOG_INIT__

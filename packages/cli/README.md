@@ -108,6 +108,24 @@ my-admin/
 └── package.json
 ```
 
+## 图标扩展
+
+生成项目预装 `lucide-vue-next`。`FIcon` 内置一组常用图标（导航、CRUD、数据图表、反馈状态、用户权限与业务场景）；内置集之外的图标由应用静态命名导入后显式注册，保持 tree-shaking：
+
+```ts
+// src/main.ts
+import { CalendarDays } from 'lucide-vue-next'
+import { registerIcons } from '@/lib/icons'
+
+registerIcons({ CalendarDays })
+```
+
+```vue
+<FIcon name="calendar-days" size="20" />
+```
+
+注册键支持 PascalCase 与 kebab-case 名称。禁止 `import * as Icons from 'lucide-vue-next'`，会破坏 tree-shaking。
+
 ## 文档
 
 - [项目仓库](https://github.com/FluffyChi-Xing/fluffy-design-pro)

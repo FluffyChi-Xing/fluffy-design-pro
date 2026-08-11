@@ -19,4 +19,5 @@ yarn-error.log
 
 ## local generated app for manual verification
 playground/
+.tmp-fluffy-verify*/
 

@@ -1,6 +1,8 @@
 import { mount } from '@vue/test-utils'
+import { CalendarDays } from 'lucide-vue-next'
 import { describe, expect, it } from 'vitest'
 import FIcon from './FIcon.vue'
+import { registerIcons } from '@/lib/icons'
 
 describe('FIcon', () => {
   it('resolves Lucide names, kebab-case names, and Fluffy aliases', () => {
@@ -26,5 +28,10 @@ describe('FIcon', () => {
     const icon = mount(FIcon, { props: { name: 'Search' } }).find('svg')
     expect(icon.attributes('aria-hidden')).toBe('true')
     expect(icon.attributes('role')).toBeUndefined()
+  })
+
+  it('renders app-registered icons via kebab-case names', () => {
+    registerIcons({ CalendarDays })
+    expect(mount(FIcon, { props: { name: 'calendar-days' } }).find('svg').exists()).toBe(true)
   })
 })

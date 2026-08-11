@@ -51,7 +51,7 @@ import { Button } from '@/components/ui/button'
 
 ### FIcon
 
-`FIcon` 以显式注册的 Lucide 图标为基础，支持 PascalCase、kebab-case 和菜单路由别名；不动态导入整个图标库。
+`FIcon` 内置一组常用 Lucide 图标（导航、CRUD、数据图表、反馈状态、用户权限与业务场景），支持 PascalCase、kebab-case 和菜单路由别名；不动态导入整个图标库。
 
 ```vue
 <FIcon name="FolderOpen" size="20" />
@@ -60,9 +60,25 @@ import { Button } from '@/components/ui/button'
 <FIcon name="Trash2" color="#dc2626" aria-label="删除" />
 ```
 
+内置集之外的图标由应用自行从 `lucide-vue-next` 命名导入后显式注册，注册键同时支持 PascalCase 与 kebab-case 名称：
+
+```ts
+// src/main.ts
+import { CalendarDays } from 'lucide-vue-next'
+import { registerIcons } from '@/lib/icons'
+
+registerIcons({ CalendarDays })
+```
+
+```vue
+<FIcon name="calendar-days" size="20" />
+```
+
+务必保持静态命名导入（`import { CalendarDays }`），避免 `import * as Icons from 'lucide-vue-next'`——后者会破坏 tree-shaking，把全量图标打入客户端 bundle。
+
 `name` 未匹配时渲染帮助图标。未提供 `aria-label` 时图标为装饰性内容；纯图标按钮仍应由按钮本身提供可访问名称。
 
-<ComponentPreview title="FIcon 名称、颜色与尺寸" status="独立可用" description="示例模拟 FIcon 的名称解析和颜色、尺寸 props；真实项目使用显式导入的 Lucide registry。">
+<ComponentPreview title="FIcon 名称、颜色与尺寸" status="独立可用" description="示例仿真 FIcon 的内置常用图标集，可切换名称、颜色与尺寸；内置集之外的应用注册图标（calendar-days）附带 registerIcons 示例。">
   <IconPreview />
 </ComponentPreview>
 
