@@ -2,6 +2,28 @@
 
 本文件记录 Fluffy Design Pro 各版本的变更。格式基于 [Keep a Changelog](https://keepachangelog.com/zh-CN/1.1.0/)，版本遵循 [Semantic Versioning](https://semver.org/lang/zh-CN/)。
 
+## [0.4.0] - 2026-08-12
+
+### Added
+
+- **FIcon 内置图标集**：`src/lib/icons.ts` 新增常用 Lucide 图标注册表（导航、CRUD、数据图表、反馈状态、用户权限与业务场景），导出 `builtinIconNames` 供展示与检索。
+- **`registerIcons` API**：内置集之外的图标由应用从 `lucide-vue-next` 静态命名导入后显式注册，注册键支持 PascalCase 与 kebab-case 名称；保持 tree-shaking，禁止 `import * as Icons`。示例以 `CalendarDays` 在 `src/main.ts` 注册并在图标展示页展示。
+- **图标展示页扩展**：`IconsPage` 渲染全部内置图标，并新增「应用注册图标」区块与注册代码示例。
+- **测试**：新增 FTree 级联勾选单测与 FIcon 注册图标渲染单测。
+
+### Changed
+
+- 图标展示页改用自适应网格并支持长名称截断。
+- Checkbox 的 v-model 绑定更新为 `model-value` / `update:model-value`，对齐当前 reka-ui API。
+
+### Fixed
+
+- 无
+
+### Security
+
+- 无
+
 ## [0.3.0] - 2026-08-11
 
 ### Added
