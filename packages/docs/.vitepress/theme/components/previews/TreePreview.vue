@@ -1,19 +1,70 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { computed, defineComponent, h, ref, type PropType } from 'vue'
 
 interface Node { key: string; label: string; children?: Node[] }
 const nodes: Node[] = [{ key: 'workspace', label: 'workspace', children: [{ key: 'src', label: 'src', children: [{ key: 'main', label: 'main.ts' }, { key: 'pages', label: 'pages' }] }, { key: 'package', label: 'package.json' }] }, { key: 'cms', label: 'cms', children: [{ key: 'read', label: 'content:read' }, { key: 'write', label: 'content:write' }] }]
+
 const expanded = ref(new Set(['workspace', 'src', 'cms']))
 const selected = ref<string>()
 const checked = ref(new Set<string>())
-function toggleExpanded(key: string) { const next = new Set(expanded.value); next.has(key) ? next.delete(key) : next.add(key); expanded.value = next }
-function toggleChecked(key: string) { const next = new Set(checked.value); next.has(key) ? next.delete(key) : next.add(key); checked.value = next }
+
+function flattenTree(list: readonly Node[]): Node[] {
+  return list.flatMap((node) => [node, ...flattenTree(node.children ?? [])])
+}
+function descendantKeys(node: Node): string[] {
+  return flattenTree([node]).map((item) => item.key)
+}
+function toggleExpanded(key: string) {
+  const next = new Set(expanded.value)
+  next.has(key) ? next.delete(key) : next.add(key)
+  expanded.value = next
+}
+function toggleChecked(key: string, value: boolean) {
+  const node = flattenTree(nodes).find((item) => item.key === key)
+  if (!node) return
+  const next = new Set(checked.value)
+  for (const item of descendantKeys(node)) value ? next.add(item) : next.delete(item)
+  checked.value = next
+}
+function nodeState(node: Node): 'checked' | 'indeterminate' | 'unchecked' {
+  const keys = descendantKeys(node)
+  if (keys.length === 1) return checked.value.has(node.key) ? 'checked' : 'unchecked'
+  const count = keys.filter((key) => checked.value.has(key)).length
+  if (count === keys.length) return 'checked'
+  if (count > 0) return 'indeterminate'
+  return 'unchecked'
+}
+
+const TreeNode = defineComponent({
+  name: 'TreePreviewNode',
+  props: { node: { type: Object as PropType<Node>, required: true } },
+  setup(props) {
+    return () => {
+      const node = props.node
+      const hasChildren = Boolean(node.children?.length)
+      const children = hasChildren && expanded.value.has(node.key)
+        ? h('ul', { class: 'children' }, node.children!.map((child) => h(TreeNode, { node: child })))
+        : null
+      return h('li', { class: 'tree-item' }, [
+        h('div', { class: ['row', { selected: selected.value === node.key }] }, [
+          hasChildren
+            ? h('button', { type: 'button', class: 'expander', 'aria-expanded': expanded.value.has(node.key), onClick: () => toggleExpanded(node.key) }, expanded.value.has(node.key) ? '⌄' : '›')
+            : h('span', { class: 'expander' }),
+          h('input', { type: 'checkbox', checked: nodeState(node) === 'checked', indeterminate: nodeState(node) === 'indeterminate', onChange: (event: Event) => toggleChecked(node.key, (event.target as HTMLInputElement).checked) }),
+          h('button', { type: 'button', class: 'label', onClick: () => (selected.value = node.key) }, node.label)
+        ]),
+        children
+      ])
+    }
+  }
+})
+
 const checkedLabel = computed(() => [...checked.value].join(', ') || '—')
 </script>
 
 <template>
   <div class="tree-preview">
-    <ul role="tree" class="tree"><template v-for="node in nodes" :key="node.key"><li class="tree-item"><div class="row" :class="{ selected: selected === node.key }"><button v-if="node.children" type="button" class="expander" :aria-expanded="expanded.has(node.key)" @click="toggleExpanded(node.key)">{{ expanded.has(node.key) ? '⌄' : '›' }}</button><span v-else class="expander" /><input type="checkbox" :checked="checked.has(node.key)" @change="toggleChecked(node.key)"><button type="button" class="label" @click="selected = node.key">{{ node.label }}</button></div><ul v-if="node.children && expanded.has(node.key)" class="children"><li v-for="child in node.children" :key="child.key"><div class="row" :class="{ selected: selected === child.key }"><button v-if="child.children" type="button" class="expander" :aria-expanded="expanded.has(child.key)" @click="toggleExpanded(child.key)">{{ expanded.has(child.key) ? '⌄' : '›' }}</button><span v-else class="expander" /><input type="checkbox" :checked="checked.has(child.key)" @change="toggleChecked(child.key)"><button type="button" class="label" @click="selected = child.key">{{ child.label }}</button></div><ul v-if="child.children && expanded.has(child.key)" class="children"><li v-for="leaf in child.children" :key="leaf.key"><div class="row" :class="{ selected: selected === leaf.key }"><span class="expander" /><input type="checkbox" :checked="checked.has(leaf.key)" @change="toggleChecked(leaf.key)"><button type="button" class="label" @click="selected = leaf.key">{{ leaf.label }}</button></div></li></ul></li></ul></li></template></ul>
+    <ul role="tree" class="tree"><TreeNode v-for="node in nodes" :key="node.key" :node="node" /></ul>
     <output>selected: {{ selected ?? '—' }} · checked: {{ checkedLabel }}</output>
   </div>
 </template>

@@ -120,7 +120,7 @@ registerIcons({ CalendarDays })
 
 节点必须使用稳定且全局唯一的 `key`。`disabled` 或 `checkable: false` 的节点不会进入级联与全选计算。
 
-<ComponentPreview title="FTree 选择与勾选" status="独立可用" description="示例演示展开、选中和勾选状态；生成项目的 FTree 还会计算级联、半选和根级全选。">
+<ComponentPreview title="FTree 选择与勾选" status="独立可用" description="示例演示展开、选中与级联勾选：勾选父节点会同时选中其所有子节点，部分选中时父节点呈现半选状态。">
   <TreePreview />
 </ComponentPreview>
 
