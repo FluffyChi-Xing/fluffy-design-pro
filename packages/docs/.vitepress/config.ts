@@ -56,6 +56,7 @@ export default defineConfig({
         text: '使用指南',
         items: [
           { text: '功能概览', link: '/guide/features' },
+          { text: '路由：自动重建', link: '/guide/routing' },
           { text: '部署选项', link: '/guide/deployment' },
           { text: 'Fluffy 生态集成', link: '/guide/integrations' },
         ],
