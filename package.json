@@ -13,8 +13,8 @@
     "docs:dev": "pnpm --filter @fluffy-design-pro/docs dev",
     "docs:build": "pnpm --filter @fluffy-design-pro/docs build",
     "docs:preview": "pnpm --filter @fluffy-design-pro/docs preview",
-    "playground": "pnpm --dir playground --ignore-workspace dev",
-    "playground:check": "pnpm --dir playground --ignore-workspace check",
-    "playground:build": "pnpm --dir playground --ignore-workspace build"
+    "playground": "pnpm --dir playground dev",
+    "playground:check": "pnpm --dir playground check",
+    "playground:build": "pnpm --dir playground build"
   }
 }

@@ -1,0 +1,68 @@
+{
+  "name": "@fluffy-design-pro/chat-assistant",
+  "version": "0.1.0",
+  "description": "A floating, streaming AI chat assistant for Vue 3.",
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    },
+    "./style.css": "./dist/style.css"
+  },
+  "files": [
+    "dist"
+  ],
+  "sideEffects": [
+    "**/*.css"
+  ],
+  "scripts": {
+    "build": "vite build",
+    "check": "vue-tsc --noEmit -p tsconfig.json",
+    "test": "vitest run",
+    "prepublishOnly": "pnpm check && pnpm build"
+  },
+  "keywords": [
+    "vue",
+    "vue3",
+    "chat",
+    "ai",
+    "sse",
+    "assistant"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/FluffyCX/fluffy-design-pro.git",
+    "directory": "packages/chat-assistant"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "peerDependencies": {
+    "vue": "^3.5.0"
+  },
+  "dependencies": {
+    "lucide-vue-next": "^0.468.0",
+    "markstream-vue": "^1.0.7"
+  },
+  "devDependencies": {
+    "@tailwindcss/vite": "^4.1.12",
+    "@types/node": "^22.15.3",
+    "@vitejs/plugin-vue": "^6.0.1",
+    "@vue/test-utils": "^2.4.6",
+    "fake-indexeddb": "^6.2.5",
+    "happy-dom": "^18.0.1",
+    "tailwindcss": "^4.1.12",
+    "typescript": "^5.8.3",
+    "vite": "^7.1.3",
+    "vite-plugin-dts": "^4.5.4",
+    "vitest": "^3.2.4",
+    "vue": "^3.5.18",
+    "vue-tsc": "^3.0.5"
+  }
+}
