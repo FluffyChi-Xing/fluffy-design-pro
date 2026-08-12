@@ -21,6 +21,7 @@ export default defineConfig({
     ['meta', { name: 'theme-color', content: '#4f46e5' }],
     ['meta', { name: 'color-scheme', content: 'light dark' }],
     ['meta', { name: 'robots', content: 'index, follow' }],
+    ['meta', { name: 'msvalidate.01', content: '6C718B6C7AB6FA176E4E482759901E92' }],
     ['meta', { property: 'og:type', content: 'website' }],
     ['meta', { property: 'og:site_name', content: 'Fluffy Design Pro' }],
     ['meta', { property: 'og:title', content: 'Fluffy Design Pro' }],
