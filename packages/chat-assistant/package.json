@@ -37,7 +37,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/FluffyCX/fluffy-design-pro.git",
+    "url": "git+https://github.com/FluffyChi-Xing/fluffy-design-pro.git",
     "directory": "packages/chat-assistant"
   },
   "publishConfig": {

@@ -2,6 +2,21 @@
 
 本文件记录 Fluffy Design Pro 各版本的变更。格式基于 [Keep a Changelog](https://keepachangelog.com/zh-CN/1.1.0/)，版本遵循 [Semantic Versioning](https://semver.org/lang/zh-CN/)。
 
+## [chat-assistant-v0.1.0] - 2026-08-13
+
+`@fluffy-design-pro/chat-assistant` 首次公开发布。
+
+### Added
+
+- Vue 3 浮动 AI 助手：支持自定义触发器、Markdown 回答、图片/文件/引用/工具调用内容、窗口拖拽、边缘吸附与内部全屏布局。
+- 基于 JSON POST + SSE 的类型化 MaaS 网关传输，支持响应生命周期、流式内容块、取消与结构化错误。
+- 浏览器 IndexedDB 本地会话历史：自动恢复、历史记录面板、新建会话和全屏侧栏，并安全处理未完成的流式消息。
+- Vitest、Vue Test Utils 与 fake IndexedDB 测试覆盖流解析、状态归约、持久化、窗口交互与拖拽边界。
+
+### Security
+
+- 上游模型凭据应仅由应用服务端或受保护网关持有；浏览器组件不存储长期 API 密钥。
+
 ## [0.4.0] - 2026-08-12
 
 ### Added
