@@ -9,6 +9,7 @@ import ChartPreview from '../.vitepress/theme/components/previews/ChartPreview.v
 import FormControlsPreview from '../.vitepress/theme/components/previews/FormControlsPreview.vue'
 import IconPreview from '../.vitepress/theme/components/previews/IconPreview.vue'
 import FeedbackPreview from '../.vitepress/theme/components/previews/FeedbackPreview.vue'
+import EmptyPreview from '../.vitepress/theme/components/previews/EmptyPreview.vue'
 import FloatingLayersPreview from '../.vitepress/theme/components/previews/FloatingLayersPreview.vue'
 import RuntimeContextPreview from '../.vitepress/theme/components/previews/RuntimeContextPreview.vue'
 import TreePreview from '../.vitepress/theme/components/previews/TreePreview.vue'
@@ -18,7 +19,7 @@ import UploadPreview from '../.vitepress/theme/components/previews/UploadPreview
 
 # 组件预览
 
-Fluffy Design Pro 的组件源码会随 CLI 生成到项目中，而不是从一个独立发布的 UI npm 包导入。生成项目中的典型导入方式是：
+Fluffy Design Pro 默认将组件源码随 CLI 生成到项目中，因此已有项目继续从本地路径导入，无需迁移：
 
 ```vue
 <script setup lang="ts">
@@ -34,12 +35,56 @@ import { Button } from '@/components/ui/button'
 下面的交互示例由文档站独立实现，用于演示生成组件的公开行为和使用方式；它们不是从生成模板直接打包或导入的组件。实际项目中的实现以生成项目源码为准。
 :::
 
+## 基础组件
+
+生成项目中的 `Button`、`Input`、`Textarea`、`Checkbox`、`Card` 与 `Skeleton` 位于 `@/components/ui/*`。这些组件共享应用的语义颜色、边框、焦点环与 surface token，因此会随创建项目时配置的品牌色以及 light / dark 模式自动变化。
+
+```vue
+<script setup lang="ts">
+import { Button } from '@/components/ui/button'
+import { Checkbox } from '@/components/ui/checkbox'
+import { Input } from '@/components/ui/input'
+</script>
+
+<template>
+  <Input v-model="name" placeholder="输入项目名称" />
+  <Checkbox v-model="enabled" />
+  <Button>保存</Button>
+</template>
+```
+
+仓库 playground 的 `/showcase/basic-components` 集中演示六个基础组件的按钮变体、输入值、字符计数、勾选状态、卡片与骨架屏切换，适合在调整主题或扩展组件前对照行为。它使用现有语义 token，而非页面专属颜色。
+
+## 可选的公共 UI 包
+
+非 Fluffy 生成项目可安装 `@fluffy-design-pro/ui` 使用相同的首批可移植组件。Vue `^3.5.0` 是 peer dependency；从显式子路径导入以保持 tree-shaking，并在应用入口加载一次预编译样式：
+
+```bash
+pnpm add @fluffy-design-pro/ui
+```
+
+```vue
+<script setup lang="ts">
+import { Button } from '@fluffy-design-pro/ui/button'
+import { FEmpty } from '@fluffy-design-pro/ui/empty'
+import '@fluffy-design-pro/ui/style.css'
+</script>
+
+<template>
+  <FEmpty title="暂无项目">
+    <Button>创建项目</Button>
+  </FEmpty>
+</template>
+```
+
+公共包首批导出 `Button`、`Input`、`Textarea`、`Checkbox`、`Card`、`Skeleton`、`FEmpty`、`FIcon`、图标注册工具和 `cn`。预编译 CSS 已包含所需 Tailwind utilities 与语义 token，宿主项目无需安装或配置 Tailwind、shadcn-vue 或 `components.json`。通过 `:root { --fluffy-brand: #6366f1; }` 可覆盖公共包的品牌色。生成项目仍应继续使用本地 `@/components/*` 与 `@/lib/*`，以保留可编辑源码及 CLI 迁移兼容性。
+
 ## 组件目录
 
 | 分组 | 组件 | 运行时前提 |
 | --- | --- | --- |
-| shadcn-vue 基础 | `Button`、`Input`、`Textarea`、`Checkbox`、`Card`、`Skeleton` | 从 `@/components/ui/*` 导入，可继续用 shadcn-vue CLI 添加组件 |
-| Fluffy 扩展 | `FIcon`、`FChart`、`FTree`、`FTypography` | 面向图标、图表、层级数据与统一排版 |
+| shadcn 风格基础 | `Button`、`Input`、`Textarea`、`Checkbox`、`Card`、`Skeleton` | 生成项目从 `@/components/ui/*` 导入；外部项目从 `@fluffy-design-pro/ui/*` 子路径导入 |
+| Fluffy 扩展 | `FIcon`、`FEmpty`、`FChart`、`FTree`、`FTypography` | 面向图标、空状态、图表、层级数据与统一排版 |
 | 浮层 | `FPopover`、`FDropdown`、`FSheet` | 需要浏览器 DOM 定位 |
 | 运行时 | `FTabs`、`FToastHost`、`FFullscreen` | 需要生成项目的 i18n、composable 或浏览器 API |
 | 可选上传 | `FUpload`、`FUploadProgress` | 选择 `--fluffy-oss` 后生成，并依赖 Pinia upload store |
@@ -47,7 +92,7 @@ import { Button } from '@/components/ui/button'
 
 ## Fluffy 管理端扩展
 
-常规按钮、输入、选择与卡片优先从 `@/components/ui/*` 导入。以下 `F*` 是生成项目中的管理端扩展源码，分别位于 `@/components/extensions/*`。
+以下 `F*` 是生成项目中的管理端扩展源码；常规按钮、输入、复选框、卡片与骨架屏优先使用上述基础组件。
 
 ### FIcon
 
@@ -80,6 +125,28 @@ registerIcons({ CalendarDays })
 
 <ComponentPreview title="FIcon 名称、颜色与尺寸" status="独立可用" description="示例仿真 FIcon 的内置常用图标集，可切换名称、颜色与尺寸；内置集之外的应用注册图标（calendar-days）附带 registerIcons 示例。">
   <IconPreview />
+</ComponentPreview>
+
+### FEmpty
+
+`FEmpty` 用于无数据、筛选无结果等非终态状态；它与 `FResult` 的操作成功/失败反馈分开。所有文字与图标 props 都可选，因此可以只显示图标、标题或由 slot 提供操作。
+
+```vue
+<FEmpty
+  icon-name="Box"
+  title="暂无项目"
+  desc="创建第一个项目后，它会出现在这里。"
+>
+  <FButton>创建项目</FButton>
+</FEmpty>
+
+<FEmpty variant="compact" status="warning" icon-name="Search" title="没有匹配的结果" />
+```
+
+`variant` 支持 `default`（默认）与 `compact`；`status` 支持 `default`、`info`（默认）、`success`、`warning`、`error`。`icon-name` 委托给 `FIcon`，未设置 `aria-label`，因此为装饰性图标；使用 `title` 传达空状态含义。默认 slot 用于创建、重试或清除筛选等恢复操作。
+
+<ComponentPreview title="FEmpty 空状态" status="独立可用" description="切换状态与 compact 变体，预览带标题、说明和恢复操作的空状态布局。">
+  <EmptyPreview />
 </ComponentPreview>
 
 ### FChart
@@ -146,34 +213,32 @@ registerIcons({ CalendarDays })
 
 ## 操作与输入
 
-<ComponentPreview title="按钮、表单项与输入控件" status="独立可用" description="对应 FButton、FFormItem、FInput、FTextarea、FSelect 和 FCheckbox 的基本交互。">
+<ComponentPreview title="按钮、表单项与输入控件" status="独立可用" description="文档站本地预览展示生成项目中常见的表单编排与交互状态。">
   <FormControlsPreview />
 </ComponentPreview>
 
-常见 API：
+基础组件可直接组合；需要 label、帮助文本与错误状态时，再使用 `FFormItem` 包装：
 
 ```vue
-<FButton variant="primary" :loading="saving" :disabled="!canSave" @click="save">
-  保存
-</FButton>
+<script setup lang="ts">
+import { Button } from '@/components/ui/button'
+import { Checkbox } from '@/components/ui/checkbox'
+import { Input } from '@/components/ui/input'
+import { Textarea } from '@/components/ui/textarea'
+import FFormItem from '@/components/ui/FFormItem.vue'
+</script>
 
-<FFormItem id="email" label="邮箱" required help="用于接收通知">
-  <template #default="field">
-    <FInput
-      :id="field.id"
-      v-model="email"
-      type="email"
-      :aria-describedby="field.describedBy"
-    />
-  </template>
-</FFormItem>
+<template>
+  <FFormItem id="email" label="邮箱" required help="用于接收通知">
+    <template #default="field">
+      <Input :id="field.id" v-model="email" type="email" :aria-describedby="field.describedBy" />
+    </template>
+  </FFormItem>
 
-<FSelect v-model="role" :options="[
-  { label: 'Editor', value: 'editor' },
-  { label: 'Viewer', value: 'viewer' },
-]" />
-<FCheckbox v-model="enabled" />
-<FTextarea v-model="description" :rows="4" />
+  <Textarea v-model="description" />
+  <Checkbox v-model="enabled" />
+  <Button :disabled="!canSave" @click="save">保存</Button>
+</template>
 ```
 
 `FFormItem` 的默认 slot 会提供 `id` 与 `describedBy`，用于保持 label、help、error 和表单控件之间的可访问关联。
@@ -263,4 +328,4 @@ npx @fluffy-design-pro/cli@latest my-admin --fluffy-oss
 
 ## 使用边界
 
-这些组件是生成到项目中的源码，不是当前可以直接 `npm install` 的独立组件包。你可以在生成项目中按业务修改它们；后续模板迁移会根据 `.fluffy/manifest.json` 的 owner 与 hash 判断哪些文件可受控更新。
+Fluffy Design Pro 提供两条明确的使用路径：CLI 生成项目保留本地组件源码，可按业务修改；公共 `@fluffy-design-pro/ui` 包则供非 Fluffy 项目通过显式子路径复用首批组件。前者不依赖公共包，后续模板迁移会根据 `.fluffy/manifest.json` 的 owner 与 hash 判断哪些本地文件可受控更新。

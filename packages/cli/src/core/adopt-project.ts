@@ -2,7 +2,7 @@ import { readFile } from 'node:fs/promises'
 import { dirname, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { assertNoSymlinkPath, exists, hashContent, renderTemplate } from './filesystem.js'
-import { createAdoptedManifest, readManifest, writeProjectManifest } from './manifest.js'
+import { createAdoptedManifest, getTemplateVersion, readManifest, writeProjectManifest } from './manifest.js'
 import { detectVueViteProject } from './project-detection.js'
 import type { AdoptionReport, ProjectOptions } from './types.js'
 
@@ -34,7 +34,7 @@ export async function adoptProject({ directory, options, dryRun }: AdoptProjectO
         owner: 'generator-owned',
         baselineHash: hashContent(current),
         templatePath: path,
-        templateVersion: '0.1.0'
+        templateVersion: getTemplateVersion()
       })
     } else {
       conflicts.push({ path, reason: 'content-mismatch' })

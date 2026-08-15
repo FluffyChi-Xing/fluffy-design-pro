@@ -23,8 +23,9 @@ description: 了解生成项目中的应用壳、组件基础、组合式逻辑�
 
 当前组件覆盖后台项目最常见的交互。查看每个组件的分组说明与交互示例：[组件预览](/guide/components)。
 
-- shadcn-vue：`Button`、`Input`、`Textarea`、`Checkbox`、`Card`、`Skeleton` 等，位于 `@/components/ui/*`
-- Fluffy extensions：`FIcon`、`FChart`、`FTree`、`FTypography`
+- shadcn-vue：`Button`、`Input`、`Textarea`、`Checkbox`、`Card`、`Skeleton` 等，位于 `@/components/ui/*`，并通过语义 token 继承品牌色与 light / dark 主题
+- 基础组件 showcase：仓库 playground 的 `/showcase/basic-components` 提供六个基础组件的交互对照
+- Fluffy extensions：`FIcon`、`FEmpty`、`FChart`、`FTree`、`FTypography`
 - Fluffy admin：`FFormItem`、`FResult`、`FToastHost`、`FCode`、`FMarkdown`
 - `FUpload`、`FUploadProgress`（选择 Fluffy OSS 后生成）
 

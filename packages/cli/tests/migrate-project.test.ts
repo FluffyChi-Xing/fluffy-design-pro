@@ -58,17 +58,19 @@ describe('migrateProject', () => {
   it('rolls back a committed managed-file update', async () => {
     const directory = await generatedProject()
     const manifest = await readManifest(directory)
-    const app = manifest.files.find((file) => file.path === 'src/App.vue')
-    if (!app) throw new Error('Missing App.vue manifest entry')
-    app.templatePath = 'src/main.ts'
+    const managed = manifest.files.find((file) => file.path === 'src/api/interceptors/index.ts')
+    if (!managed) throw new Error('Missing API interceptor manifest entry')
+    managed.templatePath = 'src/main.ts'
     await writeProjectManifest(directory, manifest)
 
-    const before = await readFile(resolve(directory, 'src/App.vue'), 'utf8')
+    const before = await readFile(resolve(directory, 'src/api/interceptors/index.ts'), 'utf8')
     const result = await migrateProject({ directory, apply: true })
 
     expect(result.applied).toBe(true)
-    expect(result.plan.changes).toHaveLength(1)
+    expect(result.plan.changes).toEqual([
+      expect.objectContaining({ path: 'src/api/interceptors/index.ts', operation: 'update' }),
+    ])
     await rollbackMigration(directory, result.plan.id)
-    expect(await readFile(resolve(directory, 'src/App.vue'), 'utf8')).toBe(before)
+    expect(await readFile(resolve(directory, 'src/api/interceptors/index.ts'), 'utf8')).toBe(before)
   })
 })

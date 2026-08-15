@@ -30,6 +30,8 @@ pnpm dev
 
 如果选择了其他包管理器，请使用对应的安装与开发命令。
 
+启动后可在侧边栏「设计系统展示」中查看组件示例；仓库 playground 的 `/showcase/basic-components` 还集中演示 `Button`、`Input`、`Textarea`、`Checkbox`、`Card` 与 `Skeleton` 如何继承统一的品牌色和 light / dark 主题。组件的生成项目与公共包使用方式见[组件预览](/guide/components)。
+
 ## 默认配置
 
 | 选项 | 默认值 |

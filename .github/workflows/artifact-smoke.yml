@@ -1,0 +1,30 @@
+name: Artifact smoke
+
+on:
+  push:
+    branches: [master]
+    tags: ['cli-v*', 'ui-v*']
+
+permissions:
+  contents: read
+
+jobs:
+  generated-cli-project:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+      - run: corepack enable
+      - run: pnpm install --frozen-lockfile
+      - run: mkdir -p .artifacts .smoke
+      - run: npm init --yes --prefix .smoke
+      - run: pnpm --filter @fluffy-design-pro/cli pack --pack-destination .artifacts
+      - run: pnpm --dir .smoke add ../.artifacts/*.tgz
+      - run: pnpm --dir .smoke exec create-fluffy-design-pro generated --provider none --package-manager pnpm
+      - run: pnpm --dir .smoke/generated install --no-frozen-lockfile
+      - run: pnpm --dir .smoke/generated check
+      - run: pnpm --dir .smoke/generated test
+      - run: pnpm --dir .smoke/generated build

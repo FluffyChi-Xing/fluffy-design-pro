@@ -1,7 +1,7 @@
 import { copyFile, mkdir, readFile, rm } from 'node:fs/promises'
 import { dirname, resolve } from 'node:path'
 import { assertNoSymlinkPath, atomicWriteFile, exists, hashContent, safeResolve, safeResolveInternal } from './filesystem.js'
-import { readManifest, writeProjectManifest } from './manifest.js'
+import { getTemplateVersion, readManifest, writeProjectManifest } from './manifest.js'
 import { createMigrationPlan } from './migration-plan.js'
 import { detectVueViteProject } from './project-detection.js'
 import type { MigrationPlan, MigrationTransaction } from './types.js'
@@ -72,7 +72,7 @@ export async function migrateProject({ directory, apply }: MigrateProjectOptions
       backupPath: `.fluffy/backups/${plan.id}`,
       changes: plan.changes.map(withoutContent)
     }
-    manifest.templateVersion = '0.1.0'
+    manifest.templateVersion = getTemplateVersion()
     manifest.files = manifest.files.map((file) => {
       const change = plan.changes.find((item) => item.path === file.path)
       return change ? { ...file, baselineHash: change.afterHash, templateVersion: manifest.templateVersion, lastTransactionId: plan.id } : file

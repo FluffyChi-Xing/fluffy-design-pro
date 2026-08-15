@@ -1,4 +1,4 @@
-import { mkdtemp, readFile, rm, writeFile } from 'node:fs/promises'
+import { cp, mkdir, mkdtemp, readFile, rm, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { resolve } from 'node:path'
 import { afterEach, describe, expect, it } from 'vitest'
@@ -39,12 +39,26 @@ describe('adoptProject', () => {
 
   it('writes only an adopted manifest after confirmation', async () => {
     const directory = await fixture()
+    await mkdir(resolve(directory, 'src/api'), { recursive: true })
+    await cp(
+      resolve(import.meta.dirname, '../templates/core/src/api/base.ts'),
+      resolve(directory, 'src/api/base.ts'),
+    )
 
     await adoptProject({ directory, options: defaultProjectOptions(directory), dryRun: false })
 
     const manifest = JSON.parse(await readFile(resolve(directory, '.fluffy/manifest.json'), 'utf8'))
     expect(manifest.schemaVersion).toBe(2)
     expect(manifest.projectKind).toBe('adopted')
+    expect(manifest.templateVersion).toBe('0.2.0')
+    expect(manifest.files).toEqual(expect.arrayContaining([
+      expect.objectContaining({
+        path: 'src/api/base.ts',
+        owner: 'generator-owned',
+        templatePath: 'src/api/base.ts',
+        templateVersion: '0.2.0',
+      }),
+    ]))
     expect(await readFile(resolve(directory, 'business.txt'), 'utf8')).toBe('leave me alone\n')
   })
 

@@ -7,9 +7,12 @@
     "node": ">=20.19.0"
   },
   "scripts": {
-    "build": "pnpm --filter @fluffy-design-pro/cli build",
-    "check": "pnpm --filter @fluffy-design-pro/cli check",
-    "test": "pnpm --filter @fluffy-design-pro/cli test",
+    "ui:sync": "node packages/cli/scripts/sync-ui-template.mjs sync",
+    "ui:check": "node packages/cli/scripts/sync-ui-template.mjs check",
+    "ui:build": "pnpm --filter @fluffy-design-pro/ui build",
+    "build": "pnpm ui:check && pnpm --filter @fluffy-design-pro/ui build && pnpm --filter @fluffy-design-pro/cli build",
+    "check": "pnpm ui:check && pnpm --filter @fluffy-design-pro/ui check && pnpm --filter @fluffy-design-pro/cli check",
+    "test": "pnpm ui:check && pnpm --filter @fluffy-design-pro/ui test && pnpm --filter @fluffy-design-pro/cli test",
     "docs:dev": "pnpm --filter @fluffy-design-pro/docs dev",
     "docs:build": "pnpm --filter @fluffy-design-pro/docs build",
     "docs:preview": "pnpm --filter @fluffy-design-pro/docs preview",

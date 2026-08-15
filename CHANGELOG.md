@@ -2,6 +2,30 @@
 
 本文件记录 Fluffy Design Pro 各版本的变更。格式基于 [Keep a Changelog](https://keepachangelog.com/zh-CN/1.1.0/)，版本遵循 [Semantic Versioning](https://semver.org/lang/zh-CN/)。
 
+## [0.5.0] - 2026-08-16
+
+### Added
+
+- `FEmpty` 空状态组件，以及 Axios 请求基础、Bearer token 管理、ApiEnvelope 解包与统一错误类型；业务 API 模块仍由项目按已确认的后端契约添加。
+- 公开的 `@fluffy-design-pro/ui` 包与受限 catalog 同步校验，CLI 生成项目继续保留可编辑的本地组件源码和既有导入路径。
+- CI、CLI/UI 发布及已打包 CLI 生成项目的 smoke workflows。
+
+### Changed
+
+- 模板版本升级至 `0.2.0`，CLI 的生成、接管与迁移统一使用当前模板版本。
+- CLI README 与文档站补充基础组件、公共 UI 包、主题令牌与分发边界说明。
+
+## [ui-v0.1.0] - 2026-08-16
+
+`@fluffy-design-pro/ui` 首次公开发布。
+
+### Added
+
+- `Button`、`Input`、`Textarea`、`Checkbox`、`Card`、`Skeleton`、`FEmpty`、`FIcon`、图标注册工具和 `cn` 的显式 ESM/CJS/类型子路径导出。
+- 预编译 `@fluffy-design-pro/ui/style.css`，外部 Vue 应用无需安装或配置 Tailwind、shadcn-vue 或 `components.json`。
+- `--fluffy-brand` CSS 变量用于覆盖公共包品牌色。
+- 源码到 CLI 模板的受限 catalog 同步校验，生成项目继续使用可编辑的本地 `@/components/*` 与 `@/lib/*` 文件。
+
 ## [chat-assistant-v0.1.0] - 2026-08-13
 
 `@fluffy-design-pro/chat-assistant` 首次公开发布。

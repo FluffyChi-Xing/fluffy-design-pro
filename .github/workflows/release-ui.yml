@@ -1,0 +1,28 @@
+name: Release UI
+
+on:
+  workflow_dispatch:
+  push:
+    tags: ['ui-v*']
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          registry-url: https://registry.npmjs.org
+      - run: corepack enable
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm ui:check
+      - run: pnpm --filter @fluffy-design-pro/ui check
+      - run: pnpm --filter @fluffy-design-pro/ui test
+      - run: pnpm --filter @fluffy-design-pro/ui build
+      - run: pnpm --filter @fluffy-design-pro/ui pack
+      - run: pnpm --filter @fluffy-design-pro/ui publish --access public --provenance

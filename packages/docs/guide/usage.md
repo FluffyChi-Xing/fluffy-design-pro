@@ -19,7 +19,7 @@ npx @fluffy-design-pro/cli@latest my-admin
 npx @fluffy-design-pro/cli@latest create my-admin
 ```
 
-创建流程生成一个新的工程目录与 `.fluffy/manifest.json` 文件清单。CLI 默认不覆盖非空目标目录。
+创建流程生成一个新的工程目录与 `.fluffy/manifest.json` 文件清单。CLI 默认不覆盖非空目标目录。生成的 UI 源码保留在本地 `@/components/*` 与 `@/lib/*` 路径，可直接编辑；它们不依赖公开 UI 包，因此既有导入路径与受管迁移边界保持稳定。基础组件、公共包与主题使用方式见[组件预览](/guide/components)。
 
 ## 接管现有项目
 

@@ -9,8 +9,9 @@ npx @fluffy-design-pro/cli@latest my-admin
 ## 特性
 
 - **应用壳**：导航栏、侧边栏、标签页、命令面板与设置面板（`f-sheet`），已接入模块化路由注册表。
-- **可复用的 `f-` 组件基础**：按钮、输入框、下拉选择、复选、多行文本、表单项、面板、加载指示、骨架屏、结果页、Toast 宿主、代码块、markdown 预览、进度条、标签页与上传组件——无需引入完整 UI 框架。
+- **可组合的 UI 基础**：shadcn 风格的 `Button`、`Input`、`Textarea`、`Checkbox`、`Card`、`Skeleton`，以及 `FEmpty`、图表、树、排版、表单、反馈与上传等 Fluffy 管理端扩展——无需引入完整 UI 框架。
 - **组合式逻辑**：`useForm`、`useTable`、`useChart`、`useLoading`、`useToast`，承载数据与反馈逻辑。
+- **请求基础**：内置 Axios 请求实例、Bearer token 管理、ApiEnvelope 解包与统一错误类型，后端业务模块按实际接口契约添加。
 - **内置页面**：首页、项目、部署、设置、登录、404，以及图表、表单、表格、图标、结果、token、反馈等 showcase 页面。
 - **国际化**：内置 `zh-CN` 与 `en-US` 双语文案。
 - **主题**：CSS 语义 token，支持 light / dark 主题与 `prefers-reduced-motion`。
@@ -92,6 +93,7 @@ npx @fluffy-design-pro/cli@latest migrate rollback <transaction-id> path/to/proj
 ```text
 my-admin/
 ├── src/
+│   ├── api/                 # Axios 请求基础、令牌与拦截器
 │   ├── components/          # f- UI 组件、上传中心、通知、设置面板、布局、导航
 │   ├── composables/         # useForm、useTable、useChart、useLoading、useToast
 │   ├── integrations/        # Fluffy OSS / Log Trace SDK（--fluffy-oss / --fluffy-log 时生成）
@@ -138,52 +140,62 @@ pnpm build     # 类型检查并构建
 pnpm preview   # 本地预览构建产物
 ```
 
-生成的工程自带应用壳与 showcase 页面（侧边栏「设计系统展示」分组下），可边运行边对照示例改业务。
+生成的工程自带应用壳与 showcase 页面（侧边栏「设计系统展示」分组下），可边运行边对照示例改业务。仓库 playground 的 `/showcase/basic-components` 则集中演示 `Button`、`Input`、`Textarea`、`Checkbox`、`Card` 与 `Skeleton` 的交互状态；它们通过语义 token 自动继承当前品牌色及 light / dark 主题。
 
-### 组件用法
+### 组件与分发方式
 
-`f-` 组件位于 `src/components/`，在需要处按需显式导入，不做全局注册，便于 tree-shaking：
-
-```ts
-import FButton from '@/components/ui/FButton.vue'
-import FPanel from '@/components/ui/FPanel.vue'
-import FIcon from '@/components/extensions/FIcon.vue'
-```
-
-常用组件一览（完整列表见 `src/components/ui/` 与 `src/components/extensions/`）：
-
-| 组件 | 说明 |
-| --- | --- |
-| `FButton` | 按钮。`variant` 支持 `primary` / `secondary` / `ghost` / `danger`；`loading` 显示内置 spinner 并禁用点击 |
-| `FPanel` | 卡片容器，承载页面区块 |
-| `FInput` / `FTextarea` / `FSelect` / `FCheckbox` | 基础表单控件 |
-| `FFormItem` | 表单字段包装，渲染标签、帮助文本与校验错误 |
-| `FSkeleton` / `FSpinner` / `FResult` / `FProgress` | 加载与反馈状态 |
-| `FTabs` / `FDropdown` / `FPopover` / `FSheet` | 交互组件（`FSheet` 用于设置面板等抽屉） |
-| `FToastHost` | Toast 宿主，配合 `useToast` 使用 |
-| `FCode` / Markdown 组件 | 代码块与 Markdown 预览 |
-| `FIcon` | 图标，见上文「图标扩展」 |
-| `FChart` | ECharts 封装，按需注册图表模块 |
-| `FTree` / `FTypography` | 树形控件与排版扩展 |
-
-示例：
+生成项目保留本地、可编辑的组件源码，按需显式导入，不做全局注册：
 
 ```vue
 <script setup lang="ts">
-import FButton from '@/components/ui/FButton.vue'
-import FPanel from '@/components/ui/FPanel.vue'
-import FIcon from '@/components/extensions/FIcon.vue'
-
-const saving = false
+import { Button } from '@/components/ui/button'
+import { Card } from '@/components/ui/card'
+import FEmpty from '@/components/extensions/FEmpty.vue'
 </script>
 
 <template>
-  <FPanel>
-    <FButton variant="secondary" :loading="saving" @click="save">保存</FButton>
-    <FIcon name="check" color="var(--success)" :size="20" aria-label="已完成" />
-  </FPanel>
+  <Card class="p-5">
+    <FEmpty title="暂无项目">
+      <Button>创建项目</Button>
+    </FEmpty>
+  </Card>
 </template>
 ```
+
+| 分组 | 组件 | 说明 |
+| --- | --- | --- |
+| shadcn 风格基础组件 | `Button`、`Input`、`Textarea`、`Checkbox`、`Card`、`Skeleton` | 位于 `@/components/ui/*`，使用统一的语义颜色、边框与焦点环 token |
+| Fluffy 扩展 | `FEmpty`、`FIcon`、`FChart`、`FTree`、`FTypography` | 空状态、图标、图表、层级数据与排版能力 |
+| 管理端组件 | `FFormItem`、`FResult`、`FToastHost`、`FCode`、`FMarkdown`、`FTabs`、`FDropdown`、`FPopover`、`FSheet` | 表单、反馈、浮层与运行时交互能力 |
+| 可选上传 | `FUpload`、`FUploadProgress` | 选择 `--fluffy-oss` 后生成 |
+
+模板统一声明 Tailwind、shadcn-vue 和 Axios 的版本；业务项目安装生成的 `package.json` 后无需额外补齐基础依赖或 Tailwind 配置。生成项目刻意继续使用本地 `@/components/*` 与 `@/lib/*` 源码，不引入 `@fluffy-design-pro/ui` 运行时依赖，因此既有导入路径、源码可编辑性与 CLI 迁移行为保持不变。
+
+### 在非 Fluffy 项目中复用
+
+公开的 `@fluffy-design-pro/ui` 面向不使用 CLI 模板的 Vue 项目。Vue `^3.5.0` 是 peer dependency；从显式子路径导入以保持 tree-shaking，并在应用入口加载一次预编译样式：
+
+```bash
+pnpm add @fluffy-design-pro/ui
+```
+
+```vue
+<script setup lang="ts">
+import { Button } from '@fluffy-design-pro/ui/button'
+import { FEmpty } from '@fluffy-design-pro/ui/empty'
+import '@fluffy-design-pro/ui/style.css'
+</script>
+```
+
+该样式已包含编译后的 Tailwind utilities 与 Fluffy 语义 token，宿主项目无需安装或配置 Tailwind、shadcn-vue 或 `components.json`。可通过 CSS 变量覆盖公共包的品牌色：
+
+```css
+:root { --fluffy-brand: #6366f1; }
+```
+
+### API 基础
+
+`@/api/base` 具名导出 `$request`、`ApiEnvelope`、`ApiError` 和 token helpers，默认导出 `{ request }`。请求实例固定使用 `/fluffy-maas` 前缀、15 秒超时；带 token 时附加 Bearer header，并只在 `{ code: 200, data }` 信封响应时返回 `data`。认证和项目模块应在后端的路由、字段和分页契约确认后再添加。
 
 数据与业务逻辑由组合式函数承载，同样按需导入（`src/composables/`）：
 

@@ -10,7 +10,8 @@ description: 了解 Fluffy Design Pro 生成工程的典型目录与可选文件
 ```text
 my-admin/
 ├── src/
-│   ├── components/          # f- UI、布局、导航、通知、设置与上传组件
+│   ├── api/                 # Axios 请求基础、令牌与拦截器
+│   ├── components/          # shadcn 风格基础组件、Fluffy 扩展、布局、导航、通知、设置与上传组件
 │   ├── composables/         # useForm、useTable、useChart、useLoading、useToast
 │   ├── integrations/        # 选择 SDK 后生成 OSS / Log Trace 集成
 │   ├── layouts/             # DefaultLayout 与设置面板

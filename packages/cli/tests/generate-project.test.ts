@@ -28,11 +28,13 @@ describe('createProject', () => {
     const vercel = JSON.parse(await readFile(resolve(directory, 'vercel.json'), 'utf8'))
 
     expect(packageJson).toContain('"name": "admin-console"')
+    expect(packageJson).toContain('"axios"')
     expect(packageJson).toContain('"echarts"')
     expect(packageJson).toContain('"lucide-vue-next"')
     expect(packageJson).toContain('"reka-ui"')
     expect(packageJson).toContain('"shadcn-vue"')
     expect(manifest.options.provider).toBe('vercel')
+    expect(manifest.templateVersion).toBe('0.2.0')
     expect(manifest.files).toEqual(expect.arrayContaining([
       expect.objectContaining({ path: 'src/components/layout/Navbar.vue' }),
       expect.objectContaining({ path: 'src/components/layout/SidebarNav.vue' }),
@@ -43,6 +45,8 @@ describe('createProject', () => {
       expect.objectContaining({ path: 'src/pages/showcase/ChartsPage.vue' }),
       expect.objectContaining({ path: 'src/pages/showcase/TreePage.vue' }),
       expect.objectContaining({ path: 'src/components/extensions/FChart.vue' }),
+      expect.objectContaining({ path: 'src/components/extensions/FEmpty.vue' }),
+      expect.objectContaining({ path: 'src/components/extensions/FEmpty.test.ts' }),
       expect.objectContaining({ path: 'src/components/extensions/FIcon.vue' }),
       expect.objectContaining({ path: 'src/components/extensions/FTree.vue' }),
       expect.objectContaining({ path: 'src/components/extensions/FTypography.vue' }),
@@ -74,12 +78,33 @@ describe('createProject', () => {
       expect.objectContaining({ path: 'src/components/settings/SettingsPanel.vue' }),
       expect.objectContaining({ path: 'src/components/notification/NotificationsPanel.vue' }),
       expect.objectContaining({ path: 'src/components/markdown/FMarkdown.vue' }),
+      expect.objectContaining({ path: 'src/api/base.ts' }),
+      expect.objectContaining({ path: 'src/api/contracts.ts' }),
+      expect.objectContaining({ path: 'src/api/index.ts' }),
+      expect.objectContaining({ path: 'src/api/token.ts' }),
+      expect.objectContaining({ path: 'src/api/token.test.ts' }),
+      expect.objectContaining({ path: 'src/api/interceptors/index.ts' }),
+      expect.objectContaining({ path: 'src/api/interceptors/index.test.ts' }),
       expect.objectContaining({ path: 'src/config/env.ts' }),
       expect.objectContaining({ path: 'src/composables/useTable.ts' }),
       expect.objectContaining({ path: 'src/composables/useLoading.test.ts' }),
       expect.objectContaining({ path: 'vitest.config.ts' }),
       expect.objectContaining({ path: 'src/stores/tabs.ts' })
     ]))
+    expect(manifest.files).toEqual(expect.arrayContaining([
+      expect.objectContaining({ path: 'src/components/ui/button/Button.vue', owner: 'generator-owned', templatePath: 'src/components/ui/button/Button.vue' }),
+      expect.objectContaining({ path: 'src/components/ui/input/Input.vue', owner: 'generator-owned', templatePath: 'src/components/ui/input/Input.vue' }),
+      expect.objectContaining({ path: 'src/components/ui/textarea/Textarea.vue', owner: 'generator-owned', templatePath: 'src/components/ui/textarea/Textarea.vue' }),
+      expect.objectContaining({ path: 'src/components/ui/checkbox/Checkbox.vue', owner: 'generator-owned', templatePath: 'src/components/ui/checkbox/Checkbox.vue' }),
+      expect.objectContaining({ path: 'src/components/ui/card/Card.vue', owner: 'generator-owned', templatePath: 'src/components/ui/card/Card.vue' }),
+      expect.objectContaining({ path: 'src/components/ui/skeleton/Skeleton.vue', owner: 'generator-owned', templatePath: 'src/components/ui/skeleton/Skeleton.vue' }),
+      expect.objectContaining({ path: 'src/components/extensions/FEmpty.vue', owner: 'generator-owned', templatePath: 'src/components/extensions/FEmpty.vue' }),
+      expect.objectContaining({ path: 'src/components/extensions/FIcon.vue', owner: 'generator-owned', templatePath: 'src/components/extensions/FIcon.vue' }),
+      expect.objectContaining({ path: 'src/lib/icons.ts', owner: 'generator-owned', templatePath: 'src/lib/icons.ts' }),
+      expect.objectContaining({ path: 'src/lib/utils.ts', owner: 'generator-owned', templatePath: 'src/lib/utils.ts' }),
+      expect.objectContaining({ path: 'src/styles/tokens.css', owner: 'generator-owned', templatePath: 'src/styles/tokens.css' }),
+    ]))
+    expect(packageJson).not.toContain('@fluffy-design-pro/ui')
     expect(vercel.outputDirectory).toBe('dist')
   })
 
