@@ -13,6 +13,11 @@ const entries = {
   card: fileURLToPath(new URL('./src/entries/card.ts', import.meta.url)),
   skeleton: fileURLToPath(new URL('./src/entries/skeleton.ts', import.meta.url)),
   empty: fileURLToPath(new URL('./src/entries/empty.ts', import.meta.url)),
+  verity: fileURLToPath(new URL('./src/entries/verity.ts', import.meta.url)),
+  crop: fileURLToPath(new URL('./src/entries/crop.ts', import.meta.url)),
+  masonry: fileURLToPath(new URL('./src/entries/masonry.ts', import.meta.url)),
+  watermark: fileURLToPath(new URL('./src/entries/watermark.ts', import.meta.url)),
+  qrcode: fileURLToPath(new URL('./src/entries/qrcode.ts', import.meta.url)),
   icon: fileURLToPath(new URL('./src/entries/icon.ts', import.meta.url)),
   utils: fileURLToPath(new URL('./src/entries/utils.ts', import.meta.url)),
 }
@@ -40,7 +45,7 @@ export default defineConfig({
       cssFileName: 'style',
     },
     rollupOptions: {
-      external: ['vue', 'lucide-vue-next', 'reka-ui', 'class-variance-authority', 'clsx', 'tailwind-merge'],
+      external: ['vue', 'qrcode', 'lucide-vue-next', 'reka-ui', 'class-variance-authority', 'clsx', 'tailwind-merge'],
     },
   },
 })

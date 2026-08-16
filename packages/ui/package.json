@@ -52,6 +52,31 @@
       "import": "./dist/icon.js",
       "require": "./dist/icon.cjs"
     },
+    "./verity": {
+      "types": "./dist/verity.d.ts",
+      "import": "./dist/verity.js",
+      "require": "./dist/verity.cjs"
+    },
+    "./crop": {
+      "types": "./dist/crop.d.ts",
+      "import": "./dist/crop.js",
+      "require": "./dist/crop.cjs"
+    },
+    "./masonry": {
+      "types": "./dist/masonry.d.ts",
+      "import": "./dist/masonry.js",
+      "require": "./dist/masonry.cjs"
+    },
+    "./watermark": {
+      "types": "./dist/watermark.d.ts",
+      "import": "./dist/watermark.js",
+      "require": "./dist/watermark.cjs"
+    },
+    "./qrcode": {
+      "types": "./dist/qrcode.d.ts",
+      "import": "./dist/qrcode.js",
+      "require": "./dist/qrcode.cjs"
+    },
     "./utils": {
       "types": "./dist/utils.d.ts",
       "import": "./dist/utils.js",
@@ -93,12 +118,14 @@
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "lucide-vue-next": "^0.468.0",
+    "qrcode": "^1.5.4",
     "reka-ui": "^2.10.3",
     "tailwind-merge": "^3.3.0"
   },
   "devDependencies": {
     "@tailwindcss/vite": "^4.1.12",
     "@types/node": "^22.15.3",
+    "@types/qrcode": "^1.5.6",
     "@vitejs/plugin-vue": "^6.0.1",
     "@vue/test-utils": "^2.4.6",
     "happy-dom": "^18.0.1",
